@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class LearningService {
 
-  private baseUrl = 'http://localhost:8080/api/learning'
+  private baseUrl = 'http://localhost:8084/api/learning'
 
   constructor(private http: HttpClient) {}
 

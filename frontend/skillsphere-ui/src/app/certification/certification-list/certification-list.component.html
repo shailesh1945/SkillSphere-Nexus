@@ -1,0 +1,95 @@
+<div class="container">
+
+  <h2>Certification Management</h2>
+
+  <div class="stats">
+
+    <div class="stat">
+      <p>Total Certifications</p>
+      <h3>{{ certifications.length }}</h3>
+    </div>
+
+    <div class="stat">
+      <p>Valid</p>
+      <h3>{{ getValidCount() }}</h3>
+    </div>
+
+    <div class="stat">
+      <p>Expired</p>
+      <h3>{{ getExpiredCount() }}</h3>
+    </div>
+
+  </div>
+
+  <div class="certifications">
+
+    <div
+      class="certification-card"
+      *ngFor="let cert of certifications"
+    >
+
+      <h3>{{ cert.name }}</h3>
+
+      <p>
+        <strong>Employee:</strong>
+        {{ cert.employeeName }}
+      </p>
+
+      <p>
+        <strong>Issuer:</strong>
+        {{ cert.issuingOrganization }}
+      </p>
+
+      <p>
+        <strong>Issued:</strong>
+        {{ cert.issueDate }}
+      </p>
+
+      <p>
+        <strong>Expiry:</strong>
+        {{ cert.expiryDate }}
+      </p>
+
+      <p>
+        <strong>Status:</strong>
+
+        <span
+          class="status"
+          [ngClass]="{
+            'valid': cert.status === 'VALID',
+            'expired': cert.status === 'EXPIRED',
+            'pending': cert.status === 'PENDING_RENEWAL'
+          }"
+        >
+          {{ cert.status }}
+        </span>
+      </p>
+
+      <div class="buttons">
+
+        <button type="button">
+          Renew
+        </button>
+
+        <button type="button">
+          View
+        </button>
+
+        <button type="button">
+          Report
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div
+    class="empty-state"
+    *ngIf="certifications.length === 0"
+  >
+    <p>No certifications found.</p>
+  </div>
+
+</div>

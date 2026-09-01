@@ -1,0 +1,54 @@
+<div class="app-container">
+
+  <!-- Header -->
+  <header class="app-header">
+
+    <div class="logo">
+      <h1>SkillSphere Nexus</h1>
+    </div>
+
+    <nav class="main-nav">
+
+      <a
+        routerLink="/learning/courses"
+        routerLinkActive="active">
+        Courses
+      </a>
+
+      <a
+        routerLink="/learning/path"
+        routerLinkActive="active">
+        Learning Path
+      </a>
+
+      <a
+        routerLink="/learning/enrollments"
+        routerLinkActive="active">
+        My Learning
+      </a>
+
+      <a
+        routerLink="/certifications"
+        routerLinkActive="active">
+        Certifications
+      </a>
+
+      <a
+        routerLink="/certifications/expiring"
+        routerLinkActive="active">
+        Expiring Certifications
+      </a>
+
+    </nav>
+
+  </header>
+
+
+  <!-- Page Content -->
+  <main class="main-content">
+
+    <router-outlet></router-outlet>
+
+  </main>
+
+</div>

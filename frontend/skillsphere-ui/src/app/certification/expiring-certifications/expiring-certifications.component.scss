@@ -1,0 +1,106 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+.container h2 {
+  margin-bottom: 20px;
+}
+
+/* Certifications */
+
+.certifications {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.certification-card {
+  background: white;
+
+  width: 100%;
+
+  padding: 20px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 6px;
+}
+
+.certification-card h3 {
+  margin-bottom: 15px;
+}
+
+.certification-card p {
+  margin-bottom: 10px;
+}
+
+/* Status */
+
+.status {
+  display: inline-block;
+
+  padding: 4px 10px;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+
+  font-weight: bold;
+}
+
+.status.expiring {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Buttons */
+
+.buttons {
+  display: flex;
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+.buttons button {
+  padding: 8px 15px;
+
+  border: 1px solid #4f46e5;
+
+  background: white;
+
+  color: #4f46e5;
+
+  border-radius: 4px;
+
+  cursor: pointer;
+}
+
+.buttons button:first-child {
+  background: #4f46e5;
+  color: white;
+}
+
+/* Empty state */
+
+.empty-state {
+  background: white;
+
+  border: 1px solid #ddd;
+
+  border-radius: 6px;
+
+  padding: 30px;
+
+  text-align: center;
+
+  color: #666;
+}

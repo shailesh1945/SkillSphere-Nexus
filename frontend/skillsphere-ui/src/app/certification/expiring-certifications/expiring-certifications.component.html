@@ -1,0 +1,68 @@
+<div class="container">
+
+  <h2>Certifications Expiring Within 30 Days</h2>
+
+  <div class="certifications">
+
+    @for (cert of certifications; track cert.certId) {
+
+      <div class="certification-card">
+
+        <h3>{{ cert.name }}</h3>
+
+        <p>
+          <strong>Employee:</strong>
+          {{ cert.employeeName }}
+        </p>
+
+        <p>
+          <strong>Issuer:</strong>
+          {{ cert.issuingOrganization }}
+        </p>
+
+        <p>
+          <strong>Expiry:</strong>
+          {{ cert.expiry }}
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+
+          <span class="status pending-renewal">
+            {{ cert.status }}
+          </span>
+
+        </p>
+
+        <div class="buttons">
+
+          <button type="button">
+            Renew
+          </button>
+
+          <button type="button">
+            View
+          </button>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+
+  @if (certifications.length === 0) {
+
+    <div class="empty-state">
+
+      <p>
+        No certifications are expiring within 30 days.
+      </p>
+
+    </div>
+
+  }
+
+</div>

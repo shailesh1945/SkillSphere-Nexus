@@ -1,0 +1,89 @@
+<div class="container">
+
+  <h2>Courses & Learning Paths</h2>
+
+  <div class="stats">
+
+    <div class="stat">
+      <p>Total Courses</p>
+      <h3>{{ totalCourses }}</h3>
+    </div>
+
+    <div class="stat">
+      <p>Enrollments</p>
+      <h3>{{ enrollments }}</h3>
+    </div>
+
+    <div class="stat">
+      <p>Completion</p>
+      <h3>{{ completion }}</h3>
+    </div>
+
+    <div class="stat">
+      <p>Completion Rate</p>
+      <h3>{{ completionRate }}%</h3>
+    </div>
+
+  </div>
+
+  <div class="courses">
+
+    <div class="course-card" *ngFor="let course of courses">
+
+      <h3>{{ course.title }}</h3>
+
+      <p>{{ course.description }}</p>
+
+      <p>
+        Duration: {{ course.duration }} hours
+      </p>
+
+      <p>
+        Enrolled: 247
+      </p>
+
+      <p>
+        Completed: 189
+      </p>
+
+      <p>
+        Learning Path: Java Full Stack
+      </p>
+
+      <div class="progress-section">
+
+        <p>
+          Progress: 67%
+        </p>
+
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+
+      </div>
+
+      <p>
+        Score: 92%
+      </p>
+
+      <div class="buttons">
+
+        <button type="button">
+          Enroll
+        </button>
+
+        <button type="button">
+          Continue
+        </button>
+
+        <button type="button">
+          Certificate
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

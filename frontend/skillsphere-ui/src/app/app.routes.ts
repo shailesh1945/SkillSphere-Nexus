@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { CourseList } from './learning/course-list/course-list';
-import { CourseDetails } from './learning/course-details/course-details';
-import { Enrollment } from './learning/enrollment/enrollment';
-import { LearningPath } from './learning/learning-path/learning-path';
+import { CourseListComponent } from './learning/course-list/course-list.component';
+import { CourseDetailsComponent } from './learning/course-details/course-details.component';
+import { EnrollmentComponent } from './learning/enrollment/enrollment.component';
+import { LearningPathComponent } from './learning/learning-path/learning-path.component';
+import { CertificationListComponent } from './certification/certification-list/certification-list.component';
+import { ExpiringCertificationsComponent } from './certification/expiring-certifications/expiring-certifications.component';
 
 export const routes: Routes = [
 
@@ -15,23 +17,33 @@ export const routes: Routes = [
 
   {
     path: 'learning/courses',
-    component: CourseList
+    component: CourseListComponent
   },
 
   {
     path: 'learning/courses/:courseId',
-    component: CourseDetails
+    component: CourseDetailsComponent   
   },
 
   {
     path: 'learning/enrollment',
-    component: Enrollment
+    component: EnrollmentComponent
   },
 
   {
     path: 'learning/path',
-    component: LearningPath
+    component: LearningPathComponent
   },
+
+  {
+  path: 'certifications',
+  component: CertificationListComponent
+},
+
+{
+  path: 'certifications/expiring',
+  component: ExpiringCertificationsComponent
+},
 
   {
     path: '**',

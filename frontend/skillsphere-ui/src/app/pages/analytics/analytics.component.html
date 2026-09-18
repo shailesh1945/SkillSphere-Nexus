@@ -1,0 +1,83 @@
+<div class="dashboard">
+
+  <div class="page-header">
+
+    <h2>Executive Career Dashboard</h2>
+
+    <p>
+      Career development and workforce analytics
+    </p>
+
+  </div>
+
+
+  @if (analytics) {
+
+    <div class="stats">
+
+      <div class="stat-card">
+        <p>Career Plans</p>
+        <h2>
+          {{ analytics.totalCareerPlans }}
+        </h2>
+      </div>
+
+
+      <div class="stat-card">
+        <p>Active Plans</p>
+        <h2>
+          {{ analytics.activeCareerPlans }}
+        </h2>
+      </div>
+
+
+      <div class="stat-card">
+        <p>Completed Plans</p>
+        <h2>
+          {{ analytics.completedPlans }}
+        </h2>
+      </div>
+
+
+      <div class="stat-card">
+        <p>Promotion Eligible</p>
+        <h2>
+          {{ analytics.promotionEligible }}
+        </h2>
+      </div>
+
+
+      <div class="stat-card">
+        <p>Skill Coverage</p>
+        <h2>
+          {{ analytics.skillCoverage }}%
+        </h2>
+      </div>
+
+
+      <div class="stat-card">
+        <p>Average Progress</p>
+        <h2>
+          {{ analytics.averageProgress }}%
+        </h2>
+      </div>
+
+
+      <div class="stat-card">
+        <p>Internal Jobs</p>
+        <h2>
+          {{ analytics.activeJobs }}
+        </h2>
+      </div>
+
+    </div>
+
+  } @else {
+
+    <div class="loading">
+      Loading analytics...
+    </div>
+
+  }
+
+</div>

@@ -1,10 +1,13 @@
 import {
   ApplicationConfig,
+  inject,
+   provideAppInitializer,
   provideZoneChangeDetection
 } from '@angular/core';
 
 import {
-  provideHttpClient
+  provideHttpClient,
+  withInterceptors
 } from '@angular/common/http';
 
 import {
@@ -12,6 +15,14 @@ import {
 } from '@angular/router';
 
 import { routes } from './app.routes';
+import { KeycloakAuthService } from './services/keycloak-auth.service';
+import { authInterceptor } from './interceptors/auth.interceptor';
+
+// export function initializeKeycloak(): () => Promise<boolean> {
+//   const authService = inject(KeycloakAuthService);
+
+//   return () => authService.init();
+// }
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +31,18 @@ export const appConfig: ApplicationConfig = {
       eventCoalescing: true
     }),
 
-    provideHttpClient(),
+    provideHttpClient(
+      withInterceptors([
+        authInterceptor
+      ])
+    ),
+
+     provideAppInitializer(() => {
+      const keycloakAuthService =
+        inject(KeycloakAuthService);
+
+      return keycloakAuthService.init();
+    }),
 
     provideRouter(routes)
   ]

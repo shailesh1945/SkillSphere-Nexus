@@ -21,6 +21,12 @@ body {
 
   background: #1f2937;
   color: white;
+
+  gap: 30px;
+}
+
+.logo {
+  flex-shrink: 0;
 }
 
 .logo h1 {
@@ -30,7 +36,10 @@ body {
 
 .main-nav {
   display: flex;
+  align-items: center;
   gap: 25px;
+
+  flex: 1;
 }
 
 .main-nav a {
@@ -38,6 +47,7 @@ body {
   text-decoration: none;
   cursor: pointer;
   font-size: 15px;
+  white-space: nowrap;
 }
 
 .main-nav a:hover {
@@ -47,6 +57,36 @@ body {
 .main-nav a.active {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  flex-shrink: 0;
+}
+
+.username {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.logout-button {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: white;
+
+  padding: 7px 14px;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .main-content {

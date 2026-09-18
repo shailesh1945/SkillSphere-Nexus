@@ -1,0 +1,162 @@
+<div class="page">
+
+  <div class="page-header">
+
+    <h2>Career Planning</h2>
+
+    <p>
+      Employee career plans and promotion readiness
+    </p>
+
+  </div>
+
+
+  @if (plans.length > 0) {
+
+    <div class="cards">
+
+      @for (plan of plans; track plan.planId) {
+
+        <div class="career-card">
+
+          <div class="card-header">
+
+            <div>
+
+              <h3>
+                {{ plan.employeeName }}
+              </h3>
+
+              <span class="status">
+                {{ plan.status }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="role">
+
+            <p>
+              <strong>Current Role</strong>
+            </p>
+
+            <p>
+              {{ plan.currentRole }}
+            </p>
+
+            <div class="arrow">
+              ↓
+            </div>
+
+            <p>
+              <strong>Target Role</strong>
+            </p>
+
+            <p class="target-role">
+              {{ plan.targetRole }}
+            </p>
+
+          </div>
+
+
+          <div class="progress-section">
+
+            <div class="progress-header">
+
+              <span>Progress</span>
+
+              <strong>
+                {{ plan.progress }}%
+              </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-value"
+                [style.width.%]="plan.progress">
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="details">
+
+            <p>
+              <strong>Mentor:</strong>
+              {{ plan.mentor || 'Not assigned' }}
+            </p>
+
+            <p>
+              <strong>Skill Gaps:</strong>
+              {{ plan.skillGaps || 'No major gaps' }}
+            </p>
+
+            <p>
+              <strong>Training Plan:</strong>
+              {{ plan.trainingPlan || 'Not defined' }}
+            </p>
+
+          </div>
+
+
+          <div class="promotion">
+
+            <div>
+
+              <span>
+                Promotion Score
+              </span>
+
+              <strong>
+                {{ plan.promotionScore }}/100
+              </strong>
+
+            </div>
+
+
+            @if (plan.promotionEligible) {
+
+              <span class="eligible">
+                Promotion Eligible
+              </span>
+
+            } @else {
+
+              <span class="not-eligible">
+                Not Yet Eligible
+              </span>
+
+            }
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+
+  @if (plans.length === 0) {
+
+    <div class="empty-state">
+
+      <h3>No Career Plans</h3>
+
+      <p>
+        No career plans are currently available.
+      </p>
+
+    </div>
+
+  }
+
+</div>

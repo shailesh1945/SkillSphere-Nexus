@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CertificationService {
 
-  private baseUrl = 'http://localhost:8085/api/certifications';
+  private baseUrl = `${environment.apiUrl}/api/certifications`;
 
   constructor(private http: HttpClient) {}
 

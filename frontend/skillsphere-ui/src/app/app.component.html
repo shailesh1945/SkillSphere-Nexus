@@ -1,54 +1,57 @@
 <div class="app-container">
-
   <!-- Header -->
   <header class="app-header">
-
     <div class="logo">
       <h1>SkillSphere Nexus</h1>
     </div>
 
     <nav class="main-nav">
+      <a routerLink="/dashboard" routerLinkActive="active"> Dashboard </a>
 
-      <a
-        routerLink="/learning/courses"
-        routerLinkActive="active">
-        Courses
-      </a>
+      <a routerLink="/learning/courses" routerLinkActive="active"> Courses </a>
 
-      <a
-        routerLink="/learning/path"
-        routerLinkActive="active">
+      <a routerLink="/learning/path" routerLinkActive="active">
         Learning Path
       </a>
 
-      <a
-        routerLink="/learning/enrollments"
-        routerLinkActive="active">
+      <!-- Corrected: enrollment, not enrollments -->
+      <a routerLink="/learning/enrollment" routerLinkActive="active">
         My Learning
       </a>
 
-      <a
-        routerLink="/certifications"
-        routerLinkActive="active">
+      <a routerLink="/certifications" routerLinkActive="active">
         Certifications
       </a>
 
-      <a
-        routerLink="/certifications/expiring"
-        routerLinkActive="active">
+      <a routerLink="/certifications/expiring" routerLinkActive="active">
         Expiring Certifications
       </a>
 
+      <!-- HR / ADMIN only -->
+      @if (isHr || isAdmin) {
+        <a routerLink="/employees" routerLinkActive="active"> Employees </a>
+      }
+
+      <!-- Training Manager / HR / ADMIN -->
+      @if (isTrainingManager || isHr || isAdmin) {
+        <a routerLink="/analytics" routerLinkActive="active"> Analytics </a>
+      }
     </nav>
 
-  </header>
+    <!-- User section -->
+    <div class="user-section">
+      <span class="username">
+        {{ username }}
+      </span>
 
+      <button type="button" class="logout-button" (click)="logout()">
+        Logout
+      </button>
+    </div>
+  </header>
 
   <!-- Page Content -->
   <main class="main-content">
-
     <router-outlet></router-outlet>
-
   </main>
-
 </div>

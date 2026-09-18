@@ -3,6 +3,7 @@ package com.skillsphere.nexus.learning_service.controller;
 import com.skillsphere.nexus.learning_service.model.CourseContent;
 import com.skillsphere.nexus.learning_service.service.CourseContentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class CourseContentController {
     private final CourseContentService contentService;
 
     @PostMapping("/course/{courseId}")
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'ADMIN')")
     public CourseContent addContent(
             @PathVariable UUID courseId,
             @RequestBody CourseContent content){
@@ -24,6 +26,7 @@ public class CourseContentController {
     }
 
     @GetMapping("/course/{courseId}")
+    @PreAuthorize("isAuthenticated()")
     public List<CourseContent> getContent(
             @PathVariable UUID courseId) {
         return contentService.getCourseContent(courseId);

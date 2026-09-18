@@ -4,6 +4,7 @@ import com.skillsphere.nexus.learning_service.dto.request.EnrollmentRequest;
 import com.skillsphere.nexus.learning_service.dto.response.EnrollmentResponse;
 import com.skillsphere.nexus.learning_service.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class EnrollmentController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINING_MANAGER', 'ADMIN')")
     public EnrollmentResponse enroll(
             @RequestBody EnrollmentRequest request) {
 
@@ -27,6 +29,7 @@ public class EnrollmentController {
 
 
     @GetMapping("/{enrollmentId}")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINING_MANAGER', 'HR', 'ADMIN')")
     public EnrollmentResponse getEnrollmentById(
             @PathVariable UUID enrollmentId) {
 
@@ -35,6 +38,7 @@ public class EnrollmentController {
 
 
     @GetMapping("/employee/{empId}")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINING_MANAGER', 'HR', 'ADMIN')")
     public List<EnrollmentResponse> getEmployeeEnrollments(
             @PathVariable UUID empId) {
 
@@ -43,6 +47,7 @@ public class EnrollmentController {
 
 
     @GetMapping("/course/{courseId}")
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'HR', 'ADMIN')")
     public List<EnrollmentResponse> getCourseEnrollments(
             @PathVariable UUID courseId) {
 
@@ -51,6 +56,7 @@ public class EnrollmentController {
 
 
     @DeleteMapping("/{enrollmentId}")
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'ADMIN')")
     public String deleteEnrollment(
             @PathVariable UUID enrollmentId) {
 

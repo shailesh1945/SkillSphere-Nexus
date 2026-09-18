@@ -4,6 +4,7 @@ import com.skillsphere.nexus.career_service.dto.request.JobRequest;
 import com.skillsphere.nexus.career_service.dto.response.JobResponse;
 import com.skillsphere.nexus.career_service.service.JobService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class JobController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public JobResponse createJob(
             @RequestBody JobRequest request) {
 
@@ -26,6 +28,7 @@ public class JobController {
 
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public List<JobResponse> getAllJobs() {
 
         return jobService.getAllJobs();
@@ -33,6 +36,7 @@ public class JobController {
 
 
     @GetMapping("/active")
+    @PreAuthorize("isAuthenticated()")
     public List<JobResponse> getActiveJobs() {
 
         return jobService.getActiveJobs();
@@ -40,6 +44,7 @@ public class JobController {
 
 
     @GetMapping("/department/{department}")
+    @PreAuthorize("isAuthenticated()")
     public List<JobResponse> getJobsByDepartment(
             @PathVariable String department) {
 
@@ -49,6 +54,7 @@ public class JobController {
 
 
     @DeleteMapping("/{jobId}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public void deleteJob(
             @PathVariable UUID jobId) {
 

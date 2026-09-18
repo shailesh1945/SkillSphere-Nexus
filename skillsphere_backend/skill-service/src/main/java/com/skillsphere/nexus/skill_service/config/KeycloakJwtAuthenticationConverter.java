@@ -41,6 +41,9 @@ public class KeycloakJwtAuthenticationConverter
         return roles.stream()
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
+                .map(role -> role.startsWith("ROLE_")
+                        ? role
+                        : "ROLE_" + role)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

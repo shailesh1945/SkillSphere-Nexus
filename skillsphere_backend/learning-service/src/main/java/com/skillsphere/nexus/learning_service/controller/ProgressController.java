@@ -4,6 +4,7 @@ package com.skillsphere.nexus.learning_service.controller;
 import com.skillsphere.nexus.learning_service.dto.response.EnrollmentResponse;
 import com.skillsphere.nexus.learning_service.service.ProgressService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -16,6 +17,7 @@ public class ProgressController {
     private final ProgressService progressService;
 
     @PutMapping("/{enrollmentId}")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINING_MANAGER', 'ADMIN')")
     public EnrollmentResponse updateProgress(
             @PathVariable UUID enrollmentId,
             @RequestParam Integer progress ) {
@@ -26,6 +28,7 @@ public class ProgressController {
     }
 
     @PostMapping("/{enrollmentId}/assessment")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINING_MANAGER', 'ADMIN')")
     public EnrollmentResponse submitAssessment(
             @PathVariable UUID enrollmentId,
             @RequestParam Float score) {
@@ -36,6 +39,7 @@ public class ProgressController {
     }
 
     @PostMapping("/{enrollmentId}/complete")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINING_MANAGER', 'ADMIN')")
     public EnrollmentResponse completeCourse(
             @PathVariable UUID enrollmentId) {
 

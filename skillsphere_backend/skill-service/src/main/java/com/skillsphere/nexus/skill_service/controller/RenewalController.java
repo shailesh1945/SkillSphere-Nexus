@@ -5,6 +5,7 @@ import com.skillsphere.nexus.skill_service.dto.response.RenewalResponse;
 import com.skillsphere.nexus.skill_service.service.RenewalService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class RenewalController {
 
 
     @PostMapping("/{certificationId}")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'HR', 'ADMIN')")
     public RenewalResponse requestRenewal(
             @PathVariable UUID certificationId,
             @RequestParam String requestedBy) {
@@ -29,6 +31,7 @@ public class RenewalController {
 
 
     @PutMapping("/{renewalId}/approve")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public RenewalResponse approveRenewal(
             @PathVariable UUID renewalId,
             @RequestBody RenewalRequest request) {

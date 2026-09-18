@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class SkillCatalogController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<SkillResponse> addSkill(
             @Valid @RequestBody SkillRequest request) {
 
@@ -30,6 +32,7 @@ public class SkillCatalogController {
     }
 
     @PutMapping("/{skillId}")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<SkillResponse> updateSkill(
             @PathVariable UUID skillId,
             @Valid @RequestBody SkillRequest request) {
@@ -43,6 +46,7 @@ public class SkillCatalogController {
     }
 
     @GetMapping("/{skillId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SkillResponse> getSkillById(
             @PathVariable UUID skillId) {
 
@@ -52,6 +56,7 @@ public class SkillCatalogController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<SkillResponse>> getAllSkills() {
 
         return ResponseEntity.ok(
@@ -60,6 +65,7 @@ public class SkillCatalogController {
     }
 
     @DeleteMapping("/{skillId}")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<Void> deleteSkill(
             @PathVariable UUID skillId) {
 
@@ -69,6 +75,7 @@ public class SkillCatalogController {
     }
 
     @GetMapping("/category/{category}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<SkillResponse>>
     getSkillsByCategory(
             @PathVariable String category) {
@@ -79,6 +86,7 @@ public class SkillCatalogController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<SkillResponse>>
     searchSkills(
             @RequestParam String keyword) {
@@ -89,6 +97,7 @@ public class SkillCatalogController {
     }
 
     @GetMapping("/exists")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<Boolean> skillExists(
             @RequestParam String skillName) {
 
@@ -98,6 +107,7 @@ public class SkillCatalogController {
     }
 
     @GetMapping("/count")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<Long> getSkillCount() {
 
         return ResponseEntity.ok(

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class EmployeeController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<EmployeeResponse> addEmployee(
             @Valid @RequestBody EmployeeRequest request) {
 
@@ -30,6 +32,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeId}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<EmployeeResponse> updateEmployee(
             @PathVariable UUID employeeId,
             @Valid @RequestBody EmployeeRequest request) {
@@ -39,6 +42,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<EmployeeResponse> getEmployeeById(
             @PathVariable UUID employeeId) {
 
@@ -47,6 +51,7 @@ public class EmployeeController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
 
         return ResponseEntity.ok(
@@ -54,6 +59,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{employeeId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteEmployee(
             @PathVariable UUID employeeId) {
 
@@ -63,6 +69,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/department/{department}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<List<EmployeeResponse>> getByDepartment(
             @PathVariable String department) {
 
@@ -72,6 +79,7 @@ public class EmployeeController {
 
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<List<EmployeeResponse>> searchEmployees(
             @RequestParam String keyword) {
 
@@ -80,6 +88,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/count")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<Long> getEmployeeCount() {
 
         return ResponseEntity.ok(
@@ -87,6 +96,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/exists")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<Boolean> emailExists(
             @RequestParam String email) {
 

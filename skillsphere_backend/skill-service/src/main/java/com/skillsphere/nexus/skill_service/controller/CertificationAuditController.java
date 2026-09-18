@@ -4,6 +4,7 @@ import com.skillsphere.nexus.skill_service.dto.response.CertificationAuditRespon
 import com.skillsphere.nexus.skill_service.service.CertificationAuditService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CertificationAuditController {
 
 
     @GetMapping("/{certificationId}/audit")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public List<CertificationAuditResponse> getAudit(
             @PathVariable UUID certificationId) {
 

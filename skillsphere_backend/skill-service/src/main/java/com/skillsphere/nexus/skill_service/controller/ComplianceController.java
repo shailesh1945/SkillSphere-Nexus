@@ -5,6 +5,7 @@ import com.skillsphere.nexus.skill_service.dto.response.ComplianceResponse;
 import com.skillsphere.nexus.skill_service.service.ComplianceService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class ComplianceController {
 
 
     @GetMapping("/{employeeId}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ComplianceResponse getCompliance(
             @PathVariable UUID employeeId) {
 

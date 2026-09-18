@@ -6,6 +6,7 @@ import com.skillsphere.nexus.learning_service.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,9 @@ public class CourseController {
     private final CourseService courseService;
 
 
+
     @PostMapping
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<CourseResponse> addCourse(
             @RequestBody CourseRequest request) {
 
@@ -30,6 +33,7 @@ public class CourseController {
 
 
     @PutMapping("/{courseId}")
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<CourseResponse> updateCourse(
             @PathVariable UUID courseId,
             @RequestBody CourseRequest request) {
@@ -42,6 +46,7 @@ public class CourseController {
 
 
     @GetMapping("/{courseId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CourseResponse> getCourseById(
             @PathVariable UUID courseId) {
 
@@ -51,6 +56,7 @@ public class CourseController {
 
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CourseResponse>> getAllCourses() {
 
         return ResponseEntity.ok(
@@ -59,6 +65,7 @@ public class CourseController {
 
 
     @DeleteMapping("/{courseId}")
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<Void> deleteCourse(
             @PathVariable UUID courseId) {
 
@@ -69,6 +76,7 @@ public class CourseController {
 
 
     @GetMapping("/active")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CourseResponse>> getActiveCourses() {
 
         return ResponseEntity.ok(
@@ -77,6 +85,7 @@ public class CourseController {
 
 
     @GetMapping("/search")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CourseResponse>> searchCourses(
             @RequestParam String keyword) {
 
@@ -86,6 +95,7 @@ public class CourseController {
 
 
     @GetMapping("/instructor")
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'HR', 'ADMIN')")
     public ResponseEntity<List<CourseResponse>>
     getCoursesByInstructor(
             @RequestParam String instructor) {
@@ -97,6 +107,7 @@ public class CourseController {
 
 
     @GetMapping("/exists")
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<Boolean> courseExists(
             @RequestParam String courseName) {
 
@@ -106,6 +117,7 @@ public class CourseController {
 
 
     @GetMapping("/count")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Long> getCourseCount() {
 
         return ResponseEntity.ok(

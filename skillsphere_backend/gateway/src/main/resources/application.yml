@@ -1,0 +1,52 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+
+        # Skill Service
+        - id: skill-service
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/skills/**
+
+        # Assessment APIs
+        - id: assessment-service
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/assessments/**
+
+        # Competency APIs
+        - id: competency-service
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/competency/**
+
+        # Certification APIs
+        - id: certification-service
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/certifications/**
+
+        # Learning Service
+        - id: learning-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/learning/**
+
+        # Career Service
+        - id: career-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/career/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

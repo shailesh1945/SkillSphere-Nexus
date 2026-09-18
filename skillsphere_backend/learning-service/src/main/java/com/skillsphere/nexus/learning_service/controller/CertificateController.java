@@ -3,6 +3,7 @@ package com.skillsphere.nexus.learning_service.controller;
 import com.skillsphere.nexus.learning_service.model.LearningCertificate;
 import com.skillsphere.nexus.learning_service.service.CertificateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ public class CertificateController {
 
     private final CertificateService certificateService;
     @PostMapping("/{enrollmentId}")
+    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'ADMIN')")
     public LearningCertificate generateCertificate(
             @PathVariable UUID enrollmentId) {
         return certificateService

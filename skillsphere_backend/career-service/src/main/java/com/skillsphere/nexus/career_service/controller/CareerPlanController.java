@@ -4,6 +4,7 @@ import com.skillsphere.nexus.career_service.dto.request.CareerPlanRequest;
 import com.skillsphere.nexus.career_service.dto.response.CareerPlanResponse;
 import com.skillsphere.nexus.career_service.service.CareerPlanService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CareerPlanController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public CareerPlanResponse createCareerPlan(
             @RequestBody CareerPlanRequest request) {
 
@@ -27,6 +29,7 @@ public class CareerPlanController {
 
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public List<CareerPlanResponse> getAllCareerPlans() {
 
         return careerPlanService
@@ -35,6 +38,7 @@ public class CareerPlanController {
 
 
     @GetMapping("/{planId}")
+    @PreAuthorize("isAuthenticated()")
     public CareerPlanResponse getCareerPlanById(
             @PathVariable UUID planId) {
 
@@ -44,6 +48,7 @@ public class CareerPlanController {
 
 
     @GetMapping("/employee/{employeeId}")
+    @PreAuthorize("isAuthenticated()")
     public List<CareerPlanResponse>
     getCareerPlansByEmployee(
             @PathVariable UUID employeeId) {
@@ -54,6 +59,7 @@ public class CareerPlanController {
 
 
     @PutMapping("/{planId}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public CareerPlanResponse updateCareerPlan(
             @PathVariable UUID planId,
             @RequestBody CareerPlanRequest request) {
@@ -66,6 +72,7 @@ public class CareerPlanController {
 
 
     @DeleteMapping("/{planId}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public void deleteCareerPlan(
             @PathVariable UUID planId) {
 

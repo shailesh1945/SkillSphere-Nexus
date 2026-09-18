@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/assessments")
+@RequestMapping("/api/assessments")
 @RequiredArgsConstructor
 public class AssessmentController {
 
@@ -20,12 +20,14 @@ public class AssessmentController {
 
     // create assessment
     @PostMapping
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public AssessmentResponse createAssessment(@RequestBody AssessmentRequest dto) {
         return assessmentService.addAssessment(dto);
     }
 
     // update assessment
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public AssessmentResponse updateAssessment(
             @PathVariable UUID id,
             @Valid @RequestBody AssessmentRequest request) {
@@ -35,6 +37,7 @@ public class AssessmentController {
 
     // GET BY ID
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public AssessmentResponse getAssessmentById(
             @PathVariable UUID id) {
 
@@ -43,6 +46,7 @@ public class AssessmentController {
 
     // GET ALL
     @GetMapping
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public List<AssessmentResponse> getAllAssessments() {
 
         return assessmentService.getAllAssessments();
@@ -52,6 +56,7 @@ public class AssessmentController {
 
     // GET BY EMPLOYEE
     @GetMapping("/employee/{employeeId}")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public List<AssessmentResponse> getAssessmentsByEmployee(
             @PathVariable UUID employeeId) {
 
@@ -61,6 +66,7 @@ public class AssessmentController {
 
     // GET BY SKILL
     @GetMapping("/skill/{skillId}")
+    @PreAuthorize("isAuthenticated()")
     public List<AssessmentResponse> getAssessmentsBySkill(
             @PathVariable UUID skillId) {
 
@@ -71,6 +77,7 @@ public class AssessmentController {
     // GET PASSED
 
     @GetMapping("/passed")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public List<AssessmentResponse> getPassedAssessments() {
 
         return assessmentService.getPassedAssessments();
@@ -79,6 +86,7 @@ public class AssessmentController {
 
     // GET FAILED
     @GetMapping("/failed")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public List<AssessmentResponse> getFailedAssessments() {
 
         return assessmentService.getFailedAssessments();
@@ -100,6 +108,7 @@ public class AssessmentController {
 
     // DELETE
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public void deleteAssessment(
             @PathVariable UUID id) {
 

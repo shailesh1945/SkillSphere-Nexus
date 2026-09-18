@@ -4,6 +4,7 @@ import com.skillsphere.nexus.skill_service.dto.response.CertificationReportRespo
 import com.skillsphere.nexus.skill_service.service.CertificationReportService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +17,7 @@ public class CertificationReportController {
 
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public CertificationReportResponse generateReport() {
 
         return reportService.generateReport();

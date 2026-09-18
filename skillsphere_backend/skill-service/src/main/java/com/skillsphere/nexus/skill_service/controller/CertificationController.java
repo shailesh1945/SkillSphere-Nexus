@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class CertificationController {
 
     // Add certification
     @PostMapping
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<CertificationResponse> addCertification(
             @Valid @RequestBody CertificationRequest request) {
 
@@ -31,6 +33,7 @@ public class CertificationController {
 
     // Update certification
     @PutMapping("/{certificationId}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<CertificationResponse> updateCertification(
             @PathVariable UUID certificationId,
             @Valid @RequestBody CertificationRequest request) {
@@ -45,6 +48,7 @@ public class CertificationController {
 
     // Get certification by ID
     @GetMapping("/{certificationId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CertificationResponse> getCertificationById(
             @PathVariable UUID certificationId) {
 
@@ -55,6 +59,7 @@ public class CertificationController {
 
     // Get all certifications
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CertificationResponse>> getAllCertifications() {
 
         return ResponseEntity.ok(
@@ -64,6 +69,7 @@ public class CertificationController {
 
     // Delete certification
     @DeleteMapping("/{certificationId}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<Void> deleteCertification(
             @PathVariable UUID certificationId) {
 
@@ -74,6 +80,7 @@ public class CertificationController {
 
     // Get certifications of an employee
     @GetMapping("/employee/{employeeId}")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<List<CertificationResponse>> getEmployeeCertifications(
             @PathVariable UUID employeeId) {
 
@@ -84,6 +91,7 @@ public class CertificationController {
 
     // Get active/valid certifications
     @GetMapping("/active")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CertificationResponse>> getActiveCertifications() {
 
         return ResponseEntity.ok(
@@ -93,6 +101,7 @@ public class CertificationController {
 
     // Get expired certifications
     @GetMapping("/expired")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<List<CertificationResponse>> getExpiredCertifications() {
 
         return ResponseEntity.ok(
@@ -102,6 +111,7 @@ public class CertificationController {
 
     // Get certifications expiring within specified days
     @GetMapping("/expiring")
+    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
     public ResponseEntity<List<CertificationResponse>> getCertificationsExpiringWithin(
             @RequestParam(defaultValue = "30") int days) {
 

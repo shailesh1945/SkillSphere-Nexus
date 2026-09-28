@@ -293,31 +293,29 @@ public class SkillProfileServiceImpl implements SkillProfileService {
         return profile;
     }
 
+
+    @Transactional
     @CacheEvict(
             value = "employeeSkillProfile",
             key = "#employeeId"
     )
-
     @Override
     public Map<String, Object> addSkillToProfile(
             UUID employeeId,
             EmployeeSkillRequest request) {
 
-        // Make sure employee exists
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "Employee not found with id: " + employeeId
                         ));
 
-        // Make sure skill exists in organizational catalog
         Skill skill = skillRepository.findById(request.getSkillId())
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "Skill not found with id: " + request.getSkillId()
                         ));
 
-        // Prevent duplicate skill
         boolean alreadyExists =
                 employeeSkillRepository
                         .existsByEmployeeEmployeeIdAndSkillSkillId(
@@ -331,7 +329,6 @@ public class SkillProfileServiceImpl implements SkillProfileService {
             );
         }
 
-        // Create employee-skill relationship
         EmployeeSkill employeeSkill = EmployeeSkill.builder()
                 .employee(employee)
                 .skill(skill)
@@ -340,8 +337,12 @@ public class SkillProfileServiceImpl implements SkillProfileService {
 
         employeeSkillRepository.save(employeeSkill);
 
-        // Return updated profile
-        return getSkillProfile(employeeId);
+        return Map.of(
+                "message", "Skill added successfully",
+                "skillId", skill.getSkillId(),
+                "skillName", skill.getSkillName(),
+                "proficiency", employeeSkill.getProficiency()
+        );
     }
 
 

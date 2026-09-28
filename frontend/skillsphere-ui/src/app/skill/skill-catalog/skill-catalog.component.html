@@ -491,7 +491,7 @@
     <!-- SKILLS -->
     @if (!loading && skills.length > 0) {
       <div class="skills-grid">
-        @for (skill of skills; track skill.skillId) {
+        @for (skill of availableSkills; track skill.skillId) {
           <div class="skill-card">
             <div class="skill-card-top">
               <div class="skill-symbol">

@@ -222,68 +222,73 @@ export class SkillCatalogComponent implements OnInit {
     });
   }
 
-  confirmAddSkill(): void {
-    if (!this.selectedSkill) {
-      return;
-    }
-
-    if (!this.employeeId) {
-      this.errorMessage = 'Unable to identify your employee profile.';
-
-      this.closeProficiencyModal();
-      return;
-    }
-
-    this.addingSkillId = this.selectedSkill.skillId;
-
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    this.skillProfileService
-      .addSkill(
-        this.employeeId,
-        this.selectedSkill.skillId,
-        this.selectedProficiency,
-      )
-      .subscribe({
-        next: (profile: any) => {
-          console.log('Updated skill profile:', profile);
-
-          /*
-           * Backend returns the complete updated profile:
-           *
-           * {
-           *   employeeDetails: ...,
-           *   skills: [...],
-           *   skillAssessments: [...],
-           *   employeeCertifications: [...],
-           *   totalSkills: ...,
-           *   totalCertifications: ...
-           * }
-           */
-
-          this.mySkills = this.normalizeEmployeeSkills(profile?.skills);
-
-          this.successMessage = 'Skill added to your profile successfully.';
-
-          this.closeProficiencyModal();
-        },
-
-        error: (error: any) => {
-          console.error('Failed to add skill:', error);
-
-          this.addingSkillId = null;
-
-          this.errorMessage = error?.error?.message ?? 'Failed to add skill.';
-
-          /*
-           * Close the modal even when the API fails.
-           * This prevents the user from getting stuck.
-           */
-          this.closeProficiencyModal();
-        },
-      });
+confirmAddSkill(): void {
+  if (!this.selectedSkill || !this.employeeId) {
+    this.errorMessage = 'Unable to add skill.';
+    return;
   }
+
+  const skillName = this.selectedSkill.skillName;
+
+  this.addingSkillId = this.selectedSkill.skillId;
+  this.errorMessage = '';
+  this.successMessage = '';
+
+  this.skillProfileService
+    .addSkill(
+      this.employeeId,
+      this.selectedSkill.skillId,
+      this.selectedProficiency
+    )
+    .subscribe({
+      next: () => {
+        this.closeProficiencyModal();
+
+        // IMPORTANT:
+        // Fetch the profile again from backend/database
+        this.skillProfileService
+          .getProfile(this.employeeId)
+          .subscribe({
+            next: (profile: any) => {
+              console.log('Reloaded profile:', profile);
+
+              this.mySkills =
+                this.normalizeEmployeeSkills(profile?.skills);
+
+              console.log(
+                'Updated My Skills:',
+                this.mySkills
+              );
+
+              this.successMessage =
+                `${skillName} added to your profile successfully.`;
+            },
+
+            error: (error: any) => {
+              console.error(
+                'Failed to reload profile:',
+                error
+              );
+
+              this.errorMessage =
+                'Skill was added, but the profile could not be refreshed.';
+            }
+          });
+      },
+
+      error: (error: any) => {
+        console.error('Failed to add skill:', error);
+
+        this.addingSkillId = null;
+
+        this.errorMessage =
+          error?.error?.message ??
+          'Failed to add skill.';
+
+        this.closeProficiencyModal();
+      }
+    });
+}
 
   // =========================
   // LOAD SKILLS
@@ -520,6 +525,12 @@ export class SkillCatalogComponent implements OnInit {
       },
     });
   }
+
+  get availableSkills(): any[] {
+  return this.skills.filter(
+    skill => !this.isSkillAdded(skill.skillId)
+  );
+}
 
   employeeId = '';
 

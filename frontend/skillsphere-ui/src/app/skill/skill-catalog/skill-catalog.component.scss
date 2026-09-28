@@ -1,6 +1,6 @@
 .skills-page {
-  padding: 32px 36px 50px;
-  max-width: 1500px;
+  padding: 32px 30px 50px;
+  max-width: 1250px;
   margin: 0 auto;
 }
 
@@ -460,35 +460,41 @@
 
 .skills-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
-
-  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
 }
 
 
-/* =========================================
-   SKILL CARD
-========================================= */
+/* =========================
+   SKILL GRID
+========================= */
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+
+/* =========================
+   COMPACT SKILL CARD
+========================= */
 
 .skill-card {
   display: flex;
-
   flex-direction: column;
 
-  min-height: 190px;
+  min-height: 155px;
 
-  padding: 20px;
+  padding: 15px;
 
   background: #ffffff;
 
   border: 1px solid #e5e7eb;
 
-  border-radius: 10px;
+  border-radius: 9px;
 
-  box-shadow:
-    0 2px 8px rgba(15, 23, 42, 0.035);
+  box-shadow: 0 2px 7px rgba(15, 23, 42, 0.035);
 
   transition:
     transform 0.2s ease,
@@ -497,13 +503,17 @@
 }
 
 .skill-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 
   border-color: #d1d5db;
 
-  box-shadow:
-    0 8px 20px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 5px 14px rgba(15, 23, 42, 0.07);
 }
+
+
+/* =========================
+   CARD TOP
+========================= */
 
 .skill-card-top {
   display: flex;
@@ -512,77 +522,109 @@
 
   justify-content: space-between;
 
-  gap: 12px;
+  gap: 10px;
 
-  margin-bottom: 17px;
+  margin-bottom: 10px;
 }
 
+
+/* Skill letter */
+
 .skill-symbol {
-  width: 42px;
-  height: 42px;
+  width: 34px;
+  height: 34px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  border-radius: 9px;
+  border-radius: 8px;
 
   background: #f3f4f6;
 
   color: #1f2937;
 
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
 }
 
+
+/* =========================
+   SKILL NAME
+========================= */
+
 .skill-card h3 {
-  margin: 0 0 9px;
+  margin: 0 0 6px;
 
   color: #111827;
 
-  font-size: 18px;
+  font-size: 16px;
+
   font-weight: 700;
 }
+
+
+/* =========================
+   DESCRIPTION
+========================= */
 
 .skill-description {
   margin: 0;
 
-  min-height: 44px;
+  min-height: 36px;
 
   color: #6b7280;
 
-  font-size: 13px;
+  font-size: 12px;
 
-  line-height: 1.6;
+  line-height: 1.45;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
+
+/* =========================
+   CATEGORY
+========================= */
+
 .category-badge {
-  padding: 5px 9px;
+  padding: 4px 8px;
 
   border-radius: 5px;
 
-  font-size: 10px;
+  font-size: 9px;
 
   font-weight: 700;
 
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
 }
 
+
+/* Technical */
 .category-badge.technical {
   background: #eff6ff;
-  color: #1d4ed8;
+  color: #2563eb;
 }
 
-.category-badge.soft-skill {
-  background: #ecfdf5;
-  color: #047857;
-}
-
+/* Management */
 .category-badge.management {
   background: #fff7ed;
   color: #c2410c;
 }
+
+/* Soft Skill */
+.category-badge.soft-skill {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+/* =========================
+   CARD FOOTER
+========================= */
 
 .skill-card-footer {
   display: flex;
@@ -593,19 +635,24 @@
 
   margin-top: auto;
 
-  padding-top: 16px;
+  padding-top: 10px;
 
   border-top: 1px solid #f1f5f9;
 }
 
+
+/* =========================
+   SKILL ID
+========================= */
+
 .skill-id {
   color: #9ca3af;
 
-  font-size: 11px;
+  font-size: 10px;
 
   text-transform: uppercase;
 
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
 }
 
 .skill-actions {
@@ -685,33 +732,41 @@
 }
 
 .proficiency-section {
-  margin-top: 20px;
-  padding-top: 16px;
+  margin-top: 12px;
+
+  padding-top: 10px;
+
   border-top: 1px solid #f1f5f9;
 }
 
 .proficiency-header {
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 
   span {
     color: #6b7280;
-    font-size: 12px;
+
+    font-size: 11px;
+
     font-weight: 600;
   }
 
   strong {
     color: #111827;
-    font-size: 14px;
+
+    font-size: 12px;
   }
 }
 
 .proficiency-bar {
   width: 100%;
-  height: 8px;
+
+  height: 6px;
 
   overflow: hidden;
 

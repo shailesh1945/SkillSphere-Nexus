@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -40,4 +42,12 @@ public class Assessment {
     @ManyToOne
     @JoinColumn(name = "skill_id")
     private Skill skill;
+
+    @OneToMany(
+            mappedBy = "assessment",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private List<AssessmentQuestion> questions = new ArrayList<>();
 }

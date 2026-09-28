@@ -1,0 +1,650 @@
+<div class="my-assessments-page">
+
+  <!-- ===================================================== -->
+  <!-- PAGE HEADER -->
+  <!-- ===================================================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>My Assessments</h1>
+
+      <p>
+        Complete your assigned skill assessments and track your results.
+      </p>
+
+    </div>
+
+    <div class="assessment-count">
+
+      {{ assessments.length }}
+
+      <span>
+        Assessment{{ assessments.length === 1 ? '' : 's' }}
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- SUCCESS -->
+  <!-- ===================================================== -->
+
+  @if (successMessage) {
+
+    <div class="success-card">
+
+      ✓ {{ successMessage }}
+
+    </div>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- ERROR -->
+  <!-- ===================================================== -->
+
+  @if (errorMessage && !showAssessment) {
+
+    <div class="error-card">
+
+      {{ errorMessage }}
+
+    </div>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- LOADING -->
+  <!-- ===================================================== -->
+
+  @if (loading) {
+
+    <div class="state-card">
+
+      <div class="loading-spinner"></div>
+
+      <p>
+        Loading your assessments...
+      </p>
+
+    </div>
+
+  }
+
+
+  @else if (!showAssessment) {
+
+    <!-- =================================================== -->
+    <!-- EMPTY -->
+    <!-- =================================================== -->
+
+    @if (assessments.length === 0) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ✓
+        </div>
+
+        <h2>
+          No assessments assigned
+        </h2>
+
+        <p>
+          You currently have no skill assessments assigned to you.
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- =================================================== -->
+    <!-- ASSESSMENT CARDS -->
+    <!-- =================================================== -->
+
+    @else {
+
+      <div class="assessment-grid">
+
+        @for (
+          assessment of assessments;
+          track assessment.assessmentId
+        ) {
+
+          <div class="assessment-card">
+
+            <div class="card-top">
+
+              <div class="assessment-icon">
+                A
+              </div>
+
+              @if (
+                assessment.score !== null &&
+                assessment.score !== undefined
+              ) {
+
+                <span
+                  class="status-badge completed">
+
+                  COMPLETED
+
+                </span>
+
+              }
+
+              @else {
+
+                <span
+                  class="status-badge assigned">
+
+                  ASSIGNED
+
+                </span>
+
+              }
+
+            </div>
+
+
+            <div class="card-content">
+
+              <h2>
+                {{ assessment.assessmentName }}
+              </h2>
+
+              @if (assessment.assessmentDate) {
+
+                <p class="assessment-date">
+
+                  Assessment Date:
+                  {{ assessment.assessmentDate | date:'dd MMM yyyy' }}
+
+                </p>
+
+              }
+
+
+              <div class="assessment-meta">
+
+                <div>
+
+                  <span class="meta-label">
+                    Questions
+                  </span>
+
+                  <strong>
+                    {{ assessment.totalQuestions }}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span class="meta-label">
+                    Passing Score
+                  </span>
+
+                  <strong>
+                    70%
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <!-- COMPLETED RESULT -->
+
+              @if (
+                assessment.score !== null &&
+                assessment.score !== undefined
+              ) {
+
+                <div class="result-section">
+
+                  <div>
+
+                    <span class="result-label">
+                      Your Score
+                    </span>
+
+                    <strong class="score">
+                      {{ assessment.score }}%
+                    </strong>
+
+                  </div>
+
+
+                  <span
+                    class="result-badge"
+                    [class.pass]="
+                      assessment.result === 'PASS'
+                    "
+                    [class.fail]="
+                      assessment.result === 'FAIL'
+                    ">
+
+                    {{ assessment.result }}
+
+                  </span>
+
+                </div>
+
+
+                <div class="verification">
+
+                  @if (assessment.verified) {
+
+                    <span class="verified">
+                      ✓ Verified by HR
+                    </span>
+
+                  }
+
+                  @else {
+
+                    <span class="pending-verification">
+                      Verification pending
+                    </span>
+
+                  }
+
+                </div>
+
+              }
+
+
+              <!-- ASSIGNED -->
+
+              @else {
+
+                <div class="assigned-message">
+
+                  <strong>
+                    Assessment assigned to you
+                  </strong>
+
+                  <span>
+                    Complete all questions to receive your score.
+                  </span>
+
+                </div>
+
+              }
+
+            </div>
+
+
+            <!-- ACTION -->
+
+            <div class="card-actions">
+
+              @if (
+                assessment.score === null ||
+                assessment.score === undefined
+              ) {
+
+                <button
+                  type="button"
+                  class="primary-button"
+                  (click)="startAssessment(assessment)">
+
+                  Start Assessment
+
+                </button>
+
+              }
+
+              @else {
+
+                <button
+                  type="button"
+                  class="completed-button"
+                  disabled>
+
+                  ✓ Assessment Completed
+
+                </button>
+
+              }
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- TAKE ASSESSMENT -->
+  <!-- ===================================================== -->
+
+  @if (showAssessment && selectedAssessment) {
+
+    <div class="assessment-container">
+
+      <!-- HEADER -->
+
+      <div class="assessment-header">
+
+        <div>
+
+          <h1>
+            {{ selectedAssessment.assessmentName }}
+          </h1>
+
+          <p>
+            Answer all questions and submit your assessment.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeAssessment()">
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <!-- ERROR -->
+
+      @if (errorMessage) {
+
+        <div class="error-card">
+
+          {{ errorMessage }}
+
+        </div>
+
+      }
+
+
+      <!-- QUESTION LOADING -->
+
+      @if (loadingQuestions) {
+
+        <div class="state-card">
+
+          <div class="loading-spinner"></div>
+
+          <p>
+            Loading questions...
+          </p>
+
+        </div>
+
+      }
+
+
+      @else if (questions.length > 0) {
+
+        <!-- QUESTION COUNT -->
+
+        <div class="progress-info">
+
+          <strong>
+            {{ questions.length }} Questions
+          </strong>
+
+          <span>
+            Passing Score: 70%
+          </span>
+
+        </div>
+
+
+        <!-- QUESTIONS -->
+
+        <div class="questions-list">
+
+          @for (
+            question of questions;
+            track question.questionId;
+            let i = $index
+          ) {
+
+            <div class="question-card">
+
+              <div class="question-number">
+
+                Question {{ i + 1 }}
+
+              </div>
+
+
+              <h2>
+                {{ question.questionText }}
+              </h2>
+
+
+              <div class="options">
+
+                <label
+                  class="option"
+                  [class.selected]="
+                    answers[question.questionId] === 'A'
+                  ">
+
+                  <input
+                    type="radio"
+                    [name]="'question-' + question.questionId"
+                    value="A"
+                    [checked]="
+                      answers[question.questionId] === 'A'
+                    "
+                    (change)="
+                      selectAnswer(
+                        question.questionId,
+                        'A'
+                      )
+                    "
+                  />
+
+                  <span class="option-letter">
+                    A
+                  </span>
+
+                  <span>
+                    {{ question.optionA }}
+                  </span>
+
+                </label>
+
+
+                <label
+                  class="option"
+                  [class.selected]="
+                    answers[question.questionId] === 'B'
+                  ">
+
+                  <input
+                    type="radio"
+                    [name]="'question-' + question.questionId"
+                    value="B"
+                    [checked]="
+                      answers[question.questionId] === 'B'
+                    "
+                    (change)="
+                      selectAnswer(
+                        question.questionId,
+                        'B'
+                      )
+                    "
+                  />
+
+                  <span class="option-letter">
+                    B
+                  </span>
+
+                  <span>
+                    {{ question.optionB }}
+                  </span>
+
+                </label>
+
+
+                <label
+                  class="option"
+                  [class.selected]="
+                    answers[question.questionId] === 'C'
+                  ">
+
+                  <input
+                    type="radio"
+                    [name]="'question-' + question.questionId"
+                    value="C"
+                    [checked]="
+                      answers[question.questionId] === 'C'
+                    "
+                    (change)="
+                      selectAnswer(
+                        question.questionId,
+                        'C'
+                      )
+                    "
+                  />
+
+                  <span class="option-letter">
+                    C
+                  </span>
+
+                  <span>
+                    {{ question.optionC }}
+                  </span>
+
+                </label>
+
+
+                <label
+                  class="option"
+                  [class.selected]="
+                    answers[question.questionId] === 'D'
+                  ">
+
+                  <input
+                    type="radio"
+                    [name]="'question-' + question.questionId"
+                    value="D"
+                    [checked]="
+                      answers[question.questionId] === 'D'
+                    "
+                    (change)="
+                      selectAnswer(
+                        question.questionId,
+                        'D'
+                      )
+                    "
+                  />
+
+                  <span class="option-letter">
+                    D
+                  </span>
+
+                  <span>
+                    {{ question.optionD }}
+                  </span>
+
+                </label>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- SUBMIT -->
+
+        <div class="submit-section">
+
+          <div>
+
+            @if (areAllQuestionsAnswered()) {
+
+              <span class="ready-message">
+                ✓ All questions answered
+              </span>
+
+            }
+
+            @else {
+
+              <span class="remaining-message">
+                Please answer all questions before submitting.
+              </span>
+
+            }
+
+          </div>
+
+
+          <div class="submit-actions">
+
+            <button
+              type="button"
+              class="cancel-button"
+              [disabled]="submitting"
+              (click)="closeAssessment()">
+
+              Cancel
+
+            </button>
+
+
+            <button
+              type="button"
+              class="primary-button"
+              [disabled]="
+                submitting ||
+                !areAllQuestionsAnswered()
+              "
+              (click)="submitAssessment()">
+
+              @if (submitting) {
+
+                Submitting...
+
+              }
+
+              @else {
+
+                Submit Assessment
+
+              }
+
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

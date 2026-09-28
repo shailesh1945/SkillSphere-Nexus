@@ -26,6 +26,20 @@ export class LearningService {
   );
 }
 
+// Create course - Training Manager/Admin
+createCourse(data: any) {
+  return this.http.post<any>(
+    `${this.baseUrl}/courses`,
+    data
+  );
+}
+
+// Delete course - Admin
+deleteCourse(courseId: string) {
+  return this.http.delete<any>(
+    `${this.baseUrl}/courses/${courseId}`
+  );
+}
 
   // get active courses
    getActiveCourses() {

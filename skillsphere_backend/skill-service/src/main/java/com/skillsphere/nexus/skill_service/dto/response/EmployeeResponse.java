@@ -26,6 +26,8 @@ public class EmployeeResponse {
 
     private String phoneNumber;
 
+    private String keycloakUserId;
+
     private String department;
 
     private LocalDate joiningDate;

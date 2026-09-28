@@ -23,6 +23,12 @@ public class EmployeeRequest {
     @Email
     private String email;
 
+    @NotBlank
+    private String username;
+
+    @NotBlank
+    private String temporaryPassword;
+
     private String phoneNumber;
 
     private String department;

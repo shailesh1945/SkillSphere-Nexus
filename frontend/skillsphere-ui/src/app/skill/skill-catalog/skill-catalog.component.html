@@ -1,0 +1,576 @@
+<div class="skills-page">
+  @if (isEmployee) {
+    <!-- ================================================= -->
+    <!-- EMPLOYEE VIEW -->
+    <!-- ================================================= -->
+
+    <div class="page-header">
+      <div class="page-title-section">
+        <div class="page-icon">⚡</div>
+
+        <div>
+          <h1>My Skills</h1>
+
+          <p>Manage the skills in your employee profile</p>
+        </div>
+      </div>
+
+      <div class="my-skill-count">{{ mySkills.length }} Skills</div>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+
+    @if (successMessage) {
+      <div class="alert success-alert">
+        <span>✓</span>
+
+        {{ successMessage }}
+      </div>
+    }
+
+    <!-- ERROR MESSAGE -->
+
+    @if (errorMessage) {
+      <div class="alert error-alert">
+        <span>!</span>
+
+        {{ errorMessage }}
+      </div>
+    }
+
+    <!-- ================================================= -->
+    <!-- MY SKILLS -->
+    <!-- ================================================= -->
+
+    <div class="catalog-header">
+      <div>
+        <h2>My Skills</h2>
+
+        <p>Skills currently added to your employee profile</p>
+      </div>
+
+      <div class="catalog-status">● Profile Active</div>
+    </div>
+
+    @if (loadingProfile) {
+      <div class="loading-card">
+        <div class="spinner"></div>
+
+        <p>Loading your skills...</p>
+      </div>
+    }
+
+    @if (!loadingProfile && mySkills.length > 0) {
+      <div class="skills-grid">
+        @for (employeeSkill of mySkills; track employeeSkill.id) {
+          <div class="skill-card">
+            <div class="skill-card-top">
+              <div class="skill-symbol">
+                {{ employeeSkill.skillName.charAt(0).toUpperCase() }}
+              </div>
+
+              <span
+                class="category-badge"
+                [class.technical]="employeeSkill.category === 'TECHNICAL'"
+                [class.soft-skill]="employeeSkill.category === 'SOFT_SKILL'"
+                [class.management]="employeeSkill.category === 'MANAGEMENT'"
+              >
+                @if (employeeSkill.category === "TECHNICAL") {
+                  Technical
+                }
+
+                @if (employeeSkill.category === "SOFT_SKILL") {
+                  Soft Skill
+                }
+
+                @if (employeeSkill.category === "MANAGEMENT") {
+                  Management
+                }
+              </span>
+            </div>
+
+            <h3>
+              {{ employeeSkill.skillName }}
+            </h3>
+
+            <p class="skill-description">
+              {{ employeeSkill.description }}
+            </p>
+
+            <div class="proficiency-section">
+              <div class="proficiency-header">
+                <span>Proficiency</span>
+
+                <strong> {{ employeeSkill.proficiency }}/10 </strong>
+              </div>
+
+              <div class="proficiency-bar">
+                <div
+                  class="proficiency-value"
+                  [style.width.%]="(employeeSkill.proficiency / 10) * 100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (!loadingProfile && mySkills.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">⚡</div>
+
+        <h3>No Skills Added Yet</h3>
+
+        <p>
+          Choose skills from the organizational catalog below to build your
+          profile.
+        </p>
+      </div>
+    }
+
+    <!-- ================================================= -->
+    <!-- AVAILABLE SKILLS -->
+    <!-- ================================================= -->
+
+    <div class="catalog-header available-skills-header">
+      <div>
+        <h2>Add Skills to My Profile</h2>
+
+        <p>Choose from the organization's available skills</p>
+      </div>
+    </div>
+
+    @if (loading) {
+      <div class="loading-card">
+        <div class="spinner"></div>
+
+        <p>Loading available skills...</p>
+      </div>
+    }
+
+    @if (!loading && skills.length > 0) {
+      <div class="skills-grid">
+        @for (skill of skills; track skill.skillId) {
+          <div class="skill-card">
+            <div class="skill-card-top">
+              <div class="skill-symbol">
+                {{ skill.skillName.charAt(0).toUpperCase() }}
+              </div>
+
+              <span
+                class="category-badge"
+                [class.technical]="skill.category === 'TECHNICAL'"
+                [class.soft-skill]="skill.category === 'SOFT_SKILL'"
+                [class.management]="skill.category === 'MANAGEMENT'"
+              >
+                @if (skill.category === "TECHNICAL") {
+                  Technical
+                }
+
+                @if (skill.category === "SOFT_SKILL") {
+                  Soft Skill
+                }
+
+                @if (skill.category === "MANAGEMENT") {
+                  Management
+                }
+              </span>
+            </div>
+
+            <h3>
+              {{ skill.skillName }}
+            </h3>
+
+            <p class="skill-description">
+              {{
+                skill.description || "No description available for this skill."
+              }}
+            </p>
+
+            <div class="skill-card-footer">
+              <span class="skill-id"> Skill </span>
+
+              @if (isSkillAdded(skill.skillId)) {
+                <button type="button" class="added-button" disabled>
+                  ✓ Added
+                </button>
+              } @else {
+                <button
+                  type="button"
+                  class="add-profile-button"
+                  [disabled]="addingSkillId === skill.skillId"
+                  (click)="addToMySkills(skill)"
+                >
+                  @if (addingSkillId === skill.skillId) {
+                    Adding...
+                  } @else {
+                    + Add to My Skills
+                  }
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ================================================= -->
+    <!-- PROFICIENCY MODAL -->
+    <!-- ================================================= -->
+
+    @if (showProficiency && selectedSkill) {
+      <div class="modal-overlay">
+        <div class="proficiency-modal">
+          <div class="modal-header">
+            <div>
+              <h3>Add {{ selectedSkill.skillName }}</h3>
+
+              <p>Select your proficiency level</p>
+            </div>
+
+            <button
+              type="button"
+              class="close-button"
+              (click)="closeProficiencyModal()"
+            >
+              ×
+            </button>
+          </div>
+
+          <div class="proficiency-form">
+            <label> Proficiency </label>
+
+            <div class="proficiency-number">{{ selectedProficiency }}/10</div>
+
+            <input
+              type="range"
+              min="1"
+              max="10"
+              [(ngModel)]="selectedProficiency"
+            />
+
+            <div class="range-labels">
+              <span> Beginner </span>
+
+              <span> Expert </span>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="closeProficiencyModal()"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="primary-button"
+              [disabled]="addingSkillId !== null"
+              (click)="confirmAddSkill()"
+            >
+              @if (addingSkillId !== null) {
+                Adding...
+              } @else {
+                Add Skill
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  } @else {
+    <!-- ================================================= -->
+    <!-- HR / ADMIN / TRAINING MANAGER VIEW -->
+    <!-- ================================================= -->
+
+    <!-- PUT YOUR CURRENT HTML HERE -->
+    <!-- Starting from: PAGE HEADER -->
+    <!-- through: EMPTY STATE -->
+
+    <div class="page-header">
+      <div class="page-title-section">
+        <div class="page-icon">⚡</div>
+
+        <div>
+          <h1>Skill Catalog</h1>
+
+          <p>Browse, manage and maintain organizational skills</p>
+        </div>
+      </div>
+
+      @if (canManageSkills) {
+        <button type="button" class="primary-button" (click)="openAddSkill()">
+          <span class="button-icon">+</span>
+          Add Skill
+        </button>
+      }
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    @if (successMessage) {
+      <div class="alert success-alert">
+        <span>✓</span>
+        {{ successMessage }}
+      </div>
+    }
+
+    <!-- ERROR MESSAGE -->
+    @if (errorMessage) {
+      <div class="alert error-alert">
+        <span>!</span>
+        {{ errorMessage }}
+      </div>
+    }
+
+    <!-- STATISTICS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon skills-icon">⚡</div>
+
+        <div>
+          <span class="stat-label"> Total Skills </span>
+
+          <strong>
+            {{ totalSkills }}
+          </strong>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon technical-icon">💻</div>
+
+        <div>
+          <span class="stat-label"> Technical </span>
+
+          <strong>
+            {{ technicalSkills }}
+          </strong>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon soft-icon">🤝</div>
+
+        <div>
+          <span class="stat-label"> Soft Skills </span>
+
+          <strong>
+            {{ softSkills }}
+          </strong>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon management-icon">👥</div>
+
+        <div>
+          <span class="stat-label"> Management </span>
+
+          <strong>
+            {{ managementSkills }}
+          </strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD SKILL FORM -->
+    @if (showAddSkill) {
+      <div class="skill-form-card">
+        <div class="form-header">
+          <div class="form-title">
+            <div class="form-icon">+</div>
+
+            <div>
+              <h2>Add New Skill</h2>
+
+              <p>Add a skill to the organizational catalog</p>
+            </div>
+          </div>
+
+          <button type="button" class="close-button" (click)="cancelAddSkill()">
+            ×
+          </button>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>
+              Skill Name
+              <span>*</span>
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="newSkill.skillName"
+              placeholder="e.g. Spring Boot"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>
+              Category
+              <span>*</span>
+            </label>
+
+            <select [(ngModel)]="newSkill.category">
+              <option value="TECHNICAL">Technical</option>
+
+              <option value="SOFT_SKILL">Soft Skill</option>
+
+              <option value="MANAGEMENT">Management</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label> Description </label>
+
+            <textarea
+              [(ngModel)]="newSkill.description"
+              rows="4"
+              placeholder="Describe the skill and its relevance to the organization"
+            >
+            </textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="cancelAddSkill()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="primary-button"
+            [disabled]="saving"
+            (click)="addSkill()"
+          >
+            @if (saving) {
+              <span>Saving...</span>
+            } @else {
+              <span>✓</span>
+              Add Skill
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- SKILL LIST HEADER -->
+    <div class="catalog-header">
+      <div>
+        <h2>Available Skills</h2>
+
+        <p>
+          {{ skills.length }}
+          skills available in the organizational catalog
+        </p>
+      </div>
+
+      <div class="catalog-status">● Catalog Active</div>
+    </div>
+
+    <!-- LOADING -->
+    @if (loading) {
+      <div class="loading-card">
+        <div class="spinner"></div>
+
+        <p>Loading skills...</p>
+      </div>
+    }
+
+    <!-- SKILLS -->
+    @if (!loading && skills.length > 0) {
+      <div class="skills-grid">
+        @for (skill of skills; track skill.skillId) {
+          <div class="skill-card">
+            <div class="skill-card-top">
+              <div class="skill-symbol">
+                {{ skill.skillName.charAt(0).toUpperCase() }}
+              </div>
+
+              <span
+                class="category-badge"
+                [class.technical]="skill.category === 'TECHNICAL'"
+                [class.soft-skill]="skill.category === 'SOFT_SKILL'"
+                [class.management]="skill.category === 'MANAGEMENT'"
+              >
+                @if (skill.category === "TECHNICAL") {
+                  Technical
+                }
+
+                @if (skill.category === "SOFT_SKILL") {
+                  Soft Skill
+                }
+
+                @if (skill.category === "MANAGEMENT") {
+                  Management
+                }
+              </span>
+            </div>
+
+            <h3>
+              {{ skill.skillName }}
+            </h3>
+
+            <p class="skill-description">
+              {{
+                skill.description || "No description available for this skill."
+              }}
+            </p>
+
+            <div class="skill-card-footer">
+              <span class="skill-id"> Skill </span>
+
+              @if (canManageSkills) {
+                <div class="skill-actions">
+                  <!-- <button
+                  type="button"
+                  title="Edit skill"
+                  (click)="openEditSkill(skill)"
+                >
+                  Edit
+                </button> -->
+
+                  <button
+                    type="button"
+                    title="Delete skill"
+                    (click)="deleteSkill(skill)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- EMPTY -->
+    @if (!loading && skills.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">⚡</div>
+
+        <h3>No Skills Found</h3>
+
+        <p>The skill catalog is currently empty.</p>
+
+        @if (canManageSkills) {
+          <button type="button" class="primary-button" (click)="openAddSkill()">
+            + Add First Skill
+          </button>
+        }
+      </div>
+    }
+  }
+</div>

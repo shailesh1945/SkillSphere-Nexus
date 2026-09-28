@@ -15,13 +15,27 @@ export class CertificationService {
     return this.http.post(this.baseUrl, data);
   }
 
+  getAllCertifications() {
+  return this.http.get<any[]>(
+    `${this.baseUrl}`
+  );
+}
+
+// getCertificationById(certificationId: string) {
+//   return this.http.get<any>(
+//     `${this.baseUrl}/${certificationId}`
+//   );
+// }
+
   getById(id: string) {
     return this.http.get(`${this.baseUrl}/${id}`);
   }
 
   getEmployeeCertifications(empId: string) {
-    return this.http.get(`${this.baseUrl}/employee/${empId}`);
-  }
+  return this.http.get<any[]>(
+    `${this.baseUrl}/employee/${empId}`
+  );
+}
 
   update(id: string, data: any) {
     return this.http.put(`${this.baseUrl}/${id}`, data);
@@ -70,6 +84,14 @@ export class CertificationService {
       }
     );
   }
+
+  
+
+  getRenewalRequests() {
+  return this.http.get<any[]>(
+    `${this.baseUrl}/renewals`
+  );
+}
 
   getCompliance(empId: string) {
     return this.http.get(

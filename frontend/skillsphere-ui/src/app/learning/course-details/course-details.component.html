@@ -1,1 +1,248 @@
-<p>course-details works!</p>
+<div class="container">
+  @if (loading && !course) {
+    <div class="loading">Loading course...</div>
+  }
+
+  @if (errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (successMessage) {
+    <div class="success-message">
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (course) {
+    <div class="course-header">
+      <button type="button" class="back-button" (click)="backToCourses()">
+        ← Back to Courses
+      </button>
+
+      <div class="course-title-section">
+        <div>
+          <h2>
+            {{ course.title }}
+          </h2>
+
+          <p>
+            {{ course.description }}
+          </p>
+        </div>
+
+        @if (course.type) {
+          <span class="course-type">
+            {{ course.type }}
+          </span>
+        }
+      </div>
+    </div>
+
+    <div class="course-layout">
+      <div class="main-content">
+        <section class="course-section">
+          <h3>About This Course</h3>
+
+          <p>
+            {{ course.description }}
+          </p>
+        </section>
+
+        <section class="course-section">
+          <h3>Course Information</h3>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span> Duration </span>
+
+              <strong> {{ course.duration }} hours </strong>
+            </div>
+
+            <div class="info-item">
+              <span> Course Type </span>
+
+              <strong>
+                {{ course.type || "Course" }}
+              </strong>
+            </div>
+
+            <div class="info-item">
+              <span> Status </span>
+
+              <strong>
+                {{ course.active ? "Active" : "Inactive" }}
+              </strong>
+            </div>
+          </div>
+        </section>
+
+        @if (isEmployee && enrollment) {
+          <section class="course-section">
+            <h3>Your Progress</h3>
+
+            <!-- CURRENT PROGRESS -->
+
+            <div class="progress-header">
+              <span> Course Progress </span>
+
+              <strong> {{ progress }}% </strong>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress" [style.width.%]="progress"></div>
+            </div>
+
+            <!-- PROGRESS CONTROL -->
+
+            @if (!completed) {
+              <div class="progress-control">
+                <label for="courseProgress"> Update your progress </label>
+
+                <input
+                  id="courseProgress"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="5"
+                  [value]="progress"
+                  [disabled]="savingProgress"
+                  (input)="onProgressChange($event)"
+                />
+
+                <div class="range-labels">
+                  <span>0%</span>
+
+                  <strong> {{ progress }}% </strong>
+
+                  <span>100%</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="update-progress-button"
+                [disabled]="savingProgress"
+                (click)="updateCourseProgress()"
+              >
+                @if (savingProgress) {
+                  Updating...
+                } @else {
+                  Update Progress
+                }
+              </button>
+            }
+
+            <!-- COMPLETED -->
+
+            @if (completed) {
+              <div class="completion-box">
+                <div class="completion-title">✓ Course Completed</div>
+
+                <p>You have successfully completed this course.</p>
+
+                @if (!certificateGenerated) {
+                  <button
+                    type="button"
+                    class="generate-certificate-button"
+                    [disabled]="generatingCertificate"
+                    (click)="generateCertificate()"
+                  >
+                    @if (generatingCertificate) {
+                      Generating Certificate...
+                    } @else {
+                      Generate Certificate
+                    }
+                  </button>
+                } @else {
+                  <div class="certificate-generated">
+                    ✓ Certificate generated successfully.
+
+                    <button
+                      type="button"
+                      class="view-certificate-button"
+                      (click)="viewCertifications()"
+                    >
+                      View My Certifications
+                    </button>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="learning-status">
+                <span class="in-progress"> In Progress </span>
+              </div>
+            }
+          </section>
+        }
+      </div>
+
+      <aside class="course-sidebar">
+        <div class="action-card">
+          @if (isEmployee) {
+            @if (!enrollment) {
+              <h3>Start Learning</h3>
+
+              <p>Enroll in this course to begin your learning journey.</p>
+
+              <button
+                type="button"
+                class="primary-button"
+                [disabled]="loading"
+                (click)="enroll()"
+              >
+                @if (loading) {
+                  Enrolling...
+                } @else {
+                  Enroll Now
+                }
+              </button>
+            } @else {
+              <h3>Your Course</h3>
+
+              <p>You are enrolled in this course.</p>
+
+              <button
+                type="button"
+                class="primary-button"
+                (click)="continueLearning()"
+              >
+                Continue Learning
+              </button>
+
+              @if (!certificateGenerated) {
+                <button
+                  type="button"
+                  class="certificate-button"
+                  [disabled]="!completed || generatingCertificate"
+                  (click)="generateCertificate()"
+                >
+                  @if (generatingCertificate) {
+                    Generating...
+                  } @else {
+                    Generate Certificate
+                  }
+                </button>
+              } @else {
+                <button
+                  type="button"
+                  class="certificate-button generated"
+                  (click)="viewCertifications()"
+                >
+                  View Certificate
+                </button>
+              }
+            }
+          }
+
+          @if (canManageCourse) {
+            <h3>Course Management</h3>
+
+            <p>You have management access to this course.</p>
+          }
+        </div>
+      </aside>
+    </div>
+  }
+</div>

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -129,29 +130,75 @@ public class RenewalServiceImpl implements RenewalService{
     }
 
 
+//    @Override
+//    public List<RenewalResponse> getRenewalRequests() {
+//
+//        return renewalRepository
+//                .findAll()
+//                .stream()
+//                .map(this::mapToResponse)
+//                .toList();
+//    }
+
+    @Override
+    public List<RenewalResponse> getRenewalRequests() {
+
+        return renewalRepository
+                .findByStatus(
+                        CertificationRenewal.RenewalStatus.REQUESTED
+                )
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+
     private RenewalResponse mapToResponse(
             CertificationRenewal renewal) {
 
+        Certification certification =
+                renewal.getCertification();
+
+        String employeeName =
+                certification.getEmployee().getFirstName()
+                        + " "
+                        + certification.getEmployee().getLastName();
+
         return RenewalResponse.builder()
+
                 .renewalId(
                         renewal.getRenewalId())
+
                 .certificationId(
-                        renewal.getCertification()
-                                .getCertificationId())
+                        certification.getCertificationId())
+
+                .certificationName(
+                        certification.getCertificationName())
+
+                .employeeName(
+                        employeeName)
+
                 .oldExpiry(
                         renewal.getOldExpiry())
+
                 .newExpiry(
                         renewal.getNewExpiry())
+
                 .status(
                         renewal.getStatus().name())
+
                 .requestedBy(
                         renewal.getRequestedBy())
+
                 .approvedBy(
                         renewal.getApprovedBy())
+
                 .requestedAt(
                         renewal.getRequestedAt())
+
                 .approvedAt(
                         renewal.getApprovedAt())
+
                 .build();
     }
 }

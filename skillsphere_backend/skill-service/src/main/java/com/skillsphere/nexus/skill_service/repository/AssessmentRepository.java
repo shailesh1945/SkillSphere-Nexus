@@ -23,4 +23,7 @@ public interface AssessmentRepository extends JpaRepository<Assessment, UUID> {
             UUID employeeId,
             Boolean verified
     );
+
+    List<Assessment> findByEmployeeKeycloakUserId(
+            String keycloakUserId);
 }

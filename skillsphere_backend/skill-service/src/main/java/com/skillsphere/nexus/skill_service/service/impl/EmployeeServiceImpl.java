@@ -4,8 +4,12 @@ import com.skillsphere.nexus.skill_service.dto.request.EmployeeRequest;
 import com.skillsphere.nexus.skill_service.dto.response.EmployeeResponse;
 import com.skillsphere.nexus.skill_service.model.Employee;
 import com.skillsphere.nexus.skill_service.repository.EmployeeRepository;
+import com.skillsphere.nexus.skill_service.service.CurrentEmployeeService;
 import com.skillsphere.nexus.skill_service.service.EmployeeService;
+import com.skillsphere.nexus.skill_service.service.KeycloakUserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,24 +22,48 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
+    private final CurrentEmployeeService currentEmployeeService;
+
+    private final KeycloakUserService keycloakUserService;
+
     @Override
+    @Transactional
     public EmployeeResponse addEmployee(EmployeeRequest request) {
 
         if (employeeRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Employee already exists with email: " + request.getEmail());
+            throw new RuntimeException(
+                    "Employee with this email already exists."
+            );
         }
+
+        String keycloakUserId =
+                keycloakUserService.createEmployeeUser(
+                        request.getUsername(),
+                        request.getEmail(),
+                        request.getFirstName(),
+                        request.getLastName(),
+                        request.getTemporaryPassword()
+                );
 
         Employee employee = Employee.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
+                .keycloakUserId(keycloakUserId)
                 .phoneNumber(request.getPhoneNumber())
                 .department(request.getDepartment())
                 .joiningDate(request.getJoiningDate())
-                .role(parseRole(request.getRole()))
+                .role(
+                        Employee.Role.valueOf(
+                                request.getRole()
+                        )
+                )
                 .build();
 
-        return mapToResponse(employeeRepository.save(employee));
+        Employee savedEmployee =
+                employeeRepository.save(employee);
+
+        return mapToResponse(savedEmployee);
     }
 
     @Override
@@ -171,6 +199,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+    @Override
+    public EmployeeResponse getCurrentEmployee(
+            Authentication authentication) {
+
+        Employee employee =
+                currentEmployeeService
+                        .getCurrentEmployee(authentication);
+
+        return mapToResponse(employee);
+    }
+
 
     // Helper method to map Employee entity to EmployeeResponse DTO
 
@@ -192,6 +231,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .phoneNumber(
                         employee.getPhoneNumber()
                 )
+                .keycloakUserId(
+                        employee.getKeycloakUserId()
+                )
+
                 .department(
                         employee.getDepartment()
                 )

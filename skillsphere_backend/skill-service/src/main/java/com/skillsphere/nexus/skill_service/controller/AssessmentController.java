@@ -1,6 +1,8 @@
 package com.skillsphere.nexus.skill_service.controller;
 
 import com.skillsphere.nexus.skill_service.dto.request.AssessmentRequest;
+import com.skillsphere.nexus.skill_service.dto.request.AssessmentSubmissionRequest;
+import com.skillsphere.nexus.skill_service.dto.response.AssessmentQuestionResponse;
 import com.skillsphere.nexus.skill_service.dto.response.AssessmentResponse;
 import com.skillsphere.nexus.skill_service.service.AssessmentService;
 import jakarta.validation.Valid;
@@ -21,7 +23,7 @@ public class AssessmentController {
     // create assessment
     @PostMapping
     @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
-    public AssessmentResponse createAssessment(@RequestBody AssessmentRequest dto) {
+    public AssessmentResponse createAssessment(@Valid @RequestBody AssessmentRequest dto) {
         return assessmentService.addAssessment(dto);
     }
 
@@ -33,6 +35,20 @@ public class AssessmentController {
             @Valid @RequestBody AssessmentRequest request) {
 
         return assessmentService.updateAssessment(id, request);
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public List<AssessmentResponse> getMyAssessments() {
+        return assessmentService.getMyAssessments();
+    }
+
+    @GetMapping("/{id}/questions")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public List<AssessmentQuestionResponse> getAssessmentQuestions(
+            @PathVariable UUID id) {
+
+        return assessmentService.getAssessmentQuestions(id);
     }
 
     // GET BY ID
@@ -50,6 +66,15 @@ public class AssessmentController {
     public List<AssessmentResponse> getAllAssessments() {
 
         return assessmentService.getAllAssessments();
+    }
+
+    @PostMapping("/{id}/submit")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public AssessmentResponse submitAssessment(
+            @PathVariable UUID id,
+            @Valid @RequestBody AssessmentSubmissionRequest request) {
+
+        return assessmentService.submitAssessment(id, request);
     }
 
 

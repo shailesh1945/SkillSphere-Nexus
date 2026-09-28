@@ -13,6 +13,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RenewalResponse {
 
+    private String certificationName;
+
+    private String employeeName;
+
     private UUID renewalId;
 
     private UUID certificationId;

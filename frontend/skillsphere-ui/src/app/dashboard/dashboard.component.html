@@ -1,61 +1,235 @@
-<section class="page">
+<section class="dashboard">
 
-  <h1>Dashboard</h1>
-
-  <div class="cards">
-
-    <div class="card">
-      <span>Employees</span>
-      <strong>12.4K</strong>
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>
+        SkillSphere Nexus overview
+      </p>
     </div>
 
-    <div class="card">
-      <span>Skills</span>
-      <strong>2,847</strong>
-    </div>
-
-    <div class="card">
-      <span>Courses</span>
-      <strong>847</strong>
-    </div>
-
-    <div class="card">
-      <span>Completion</span>
-      <strong>87%</strong>
-    </div>
-
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadDashboard()"
+      [disabled]="loading"
+    >
+      {{ loading ? 'Loading...' : 'Refresh' }}
+    </button>
   </div>
 
-  <div class="panel">
 
-    <h2>Learning Progress</h2>
+  <!-- Loading -->
+  @if (loading) {
 
-    <div class="progress">
-      <div class="progress-value"></div>
+    <div class="loading">
+      Loading dashboard data...
     </div>
 
-  </div>
+  }
 
-  <div class="grid">
 
-    <div class="panel">
-      <h3>Skill Gap</h3>
-      <p>Angular +3</p>
-      <p>Leadership +2</p>
+  <!-- Error -->
+  @else if (error) {
+
+    <div class="error-message">
+
+      <h3>Unable to load dashboard</h3>
+
+      <p>
+        Please check that the backend services and API Gateway
+        are running.
+      </p>
+
+      <button
+        type="button"
+        (click)="loadDashboard()"
+      >
+        Try Again
+      </button>
+
     </div>
 
-    <div class="panel">
-      <h3>Certification</h3>
-      <p>8.4K Active</p>
-      <p>247 Expiring</p>
+  }
+
+
+  <!-- Dashboard -->
+  @else {
+
+    <!-- Main statistics -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <span>Employees</span>
+        <strong>
+          {{ dashboard.employees }}
+        </strong>
+        <small>
+          Total employees
+        </small>
+      </div>
+
+
+      <div class="stat-card">
+        <span>Skills</span>
+        <strong>
+          {{ dashboard.skills }}
+        </strong>
+        <small>
+          Skills in catalog
+        </small>
+      </div>
+
+
+      <div class="stat-card">
+        <span>Courses</span>
+        <strong>
+          {{ dashboard.courses }}
+        </strong>
+        <small>
+          Available courses
+        </small>
+      </div>
+
+
+      <div class="stat-card">
+        <span>Career Plans</span>
+        <strong>
+          {{ dashboard.careerPlans }}
+        </strong>
+        <small>
+          Career plans
+        </small>
+      </div>
+
     </div>
 
-    <div class="panel">
-      <h3>Career</h3>
-      <p>2,847 Plans</p>
-      <p>247 Promotions</p>
+
+    <!-- Certification section -->
+     @if (isAdmin || isHr || isTrainingManager) {
+    <div class="section">
+
+      <h2>Certification Overview</h2>
+
+      <div class="stats-grid">
+
+        <div class="stat-card warning">
+          <span>Expiring Certifications</span>
+
+          <strong>
+            {{ dashboard.expiringCertifications }}
+          </strong>
+
+          <small>
+            Certifications requiring attention
+          </small>
+        </div>
+
+      </div>
+
+    </div>
+  }
+
+
+    <!-- Career analytics -->
+    <div class="section">
+
+      <h2>Career Analytics</h2>
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <span>Active Jobs</span>
+
+          <strong>
+            {{ activeJobs }}
+          </strong>
+
+          <small>
+            Internal opportunities
+          </small>
+        </div>
+
+
+        <div class="stat-card">
+          <span>Promotions</span>
+
+          <strong>
+            {{ promotions }}
+          </strong>
+
+          <small>
+            Promotion records
+          </small>
+        </div>
+
+
+        <div class="stat-card">
+          <span>Completion Rate</span>
+
+          <strong>
+            {{ averageCompletionRate }}%
+          </strong>
+
+          <small>
+            Learning completion
+          </small>
+        </div>
+
+      </div>
+
     </div>
 
-  </div>
+
+    <!-- System status -->
+     @if (isAdmin || isHr || isTrainingManager) {
+    <div class="section">
+
+      <h2>Integration Status</h2>
+
+      <div class="status-grid">
+
+        <div class="status-card">
+          <span class="status-dot"></span>
+          <div>
+            <strong>API Gateway</strong>
+            <small>Port 8090</small>
+          </div>
+        </div>
+
+
+        <div class="status-card">
+          <span class="status-dot"></span>
+          <div>
+            <strong>Skill Service</strong>
+            <small>Port 8085</small>
+          </div>
+        </div>
+
+
+        <div class="status-card">
+          <span class="status-dot"></span>
+          <div>
+            <strong>Learning Service</strong>
+            <small>Port 8084</small>
+          </div>
+        </div>
+
+
+        <div class="status-card">
+          <span class="status-dot"></span>
+          <div>
+            <strong>Career Service</strong>
+            <small>Port 8083</small>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  }
+
+  }
 
 </section>

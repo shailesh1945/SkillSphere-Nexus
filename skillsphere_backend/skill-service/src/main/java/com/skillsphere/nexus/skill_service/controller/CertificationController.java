@@ -80,7 +80,7 @@ public class CertificationController {
 
     // Get certifications of an employee
     @GetMapping("/employee/{employeeId}")
-    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'HR', 'ADMIN')")
     public ResponseEntity<List<CertificationResponse>> getEmployeeCertifications(
             @PathVariable UUID employeeId) {
 

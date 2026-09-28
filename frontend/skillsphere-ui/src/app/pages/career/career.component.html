@@ -1,28 +1,190 @@
 <div class="page">
+  <!-- HEADER -->
 
   <div class="page-header">
+    <div>
+      <h2>Career Planning</h2>
 
-    <h2>Career Planning</h2>
+      <p>Employee career plans and promotion readiness</p>
+    </div>
 
-    <p>
-      Employee career plans and promotion readiness
-    </p>
-
+    @if (canManageCareerPlans) {
+      <button type="button" class="add-button" (click)="openAddCareerPlan()">
+        + Create Career Plan
+      </button>
+    }
   </div>
 
+  <!-- MESSAGES -->
 
-  @if (plans.length > 0) {
+  @if (successMessage) {
+    <div class="success-message">
+      {{ successMessage }}
+    </div>
+  }
 
+  @if (errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <!-- ADD CAREER PLAN -->
+
+  @if (showAddForm) {
+    <div class="career-form">
+      <div class="form-header">
+        <div>
+          <h3>Create Career Plan</h3>
+
+          <p>Create a career development plan for an employee</p>
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cancelAddCareerPlan()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="employee"> Employee * </label>
+
+          @if (loadingEmployees) {
+            <div class="select-loading">Loading employees...</div>
+          } @else {
+            <select
+              id="employee"
+              name="employee"
+              [(ngModel)]="newPlan.employeeId"
+              (ngModelChange)="onEmployeeSelected()"
+              required
+            >
+              <option value="">Select an employee</option>
+
+              @for (employee of employees; track employee.employeeId) {
+                <option [value]="employee.employeeId">
+                  {{ employee.firstName }}
+                  {{ employee.lastName }}
+
+                  —
+                  {{ employee.email }}
+                </option>
+              }
+            </select>
+          }
+
+          @if (!loadingEmployees && employees.length === 0) {
+            <small class="field-error"> No employees available. </small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label> Current Role * </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newPlan.currentRole"
+            placeholder="e.g. Software Developer"
+          />
+        </div>
+
+        <div class="form-group">
+          <label> Target Role * </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newPlan.targetRole"
+            placeholder="e.g. Senior Software Developer"
+          />
+        </div>
+
+        <div class="form-group">
+          <label> Progress (%) </label>
+
+          <input
+            type="number"
+            min="0"
+            max="100"
+            [(ngModel)]="newPlan.progress"
+          />
+        </div>
+
+        <div class="form-group">
+          <label> Mentor </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newPlan.mentor"
+            placeholder="e.g. David Johnson"
+          />
+        </div>
+
+        <div class="form-group full-width">
+          <label> Skill Gaps </label>
+
+          <textarea
+            [(ngModel)]="newPlan.skillGaps"
+            placeholder="e.g. Spring Boot, Kafka"
+          >
+          </textarea>
+        </div>
+
+        <div class="form-group full-width">
+          <label> Training Plan </label>
+
+          <textarea
+            [(ngModel)]="newPlan.trainingPlan"
+            placeholder="e.g. Advanced Spring Boot and Kafka Training"
+          >
+          </textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancelAddCareerPlan()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="saving"
+          (click)="addCareerPlan()"
+        >
+          @if (saving) {
+            Creating...
+          } @else {
+            Create Career Plan
+          }
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- LOADING -->
+
+  @if (loading) {
+    <div class="loading">Loading career plans...</div>
+  }
+
+  <!-- CAREER PLANS -->
+
+  @if (!loading && plans.length > 0) {
     <div class="cards">
-
       @for (plan of plans; track plan.planId) {
-
         <div class="career-card">
+          <!-- CARD HEADER -->
 
           <div class="card-header">
-
             <div>
-
               <h3>
                 {{ plan.employeeName }}
               </h3>
@@ -30,133 +192,117 @@
               <span class="status">
                 {{ plan.status }}
               </span>
-
             </div>
-
           </div>
 
+          <!-- ROLE -->
 
           <div class="role">
-
             <p>
-              <strong>Current Role</strong>
+              <strong> Current Role </strong>
             </p>
 
             <p>
               {{ plan.currentRole }}
             </p>
 
-            <div class="arrow">
-              ↓
-            </div>
+            <div class="arrow">↓</div>
 
             <p>
-              <strong>Target Role</strong>
+              <strong> Target Role </strong>
             </p>
 
             <p class="target-role">
               {{ plan.targetRole }}
             </p>
-
           </div>
 
+          <!-- PROGRESS -->
 
           <div class="progress-section">
-
             <div class="progress-header">
+              <span> Progress </span>
 
-              <span>Progress</span>
-
-              <strong>
-                {{ plan.progress }}%
-              </strong>
-
+              <strong> {{ plan.progress ?? 0 }}% </strong>
             </div>
 
             <div class="progress-bar">
-
               <div
                 class="progress-value"
-                [style.width.%]="plan.progress">
-              </div>
-
+                [style.width.%]="plan.progress ?? 0"
+              ></div>
             </div>
-
           </div>
 
+          <!-- DETAILS -->
 
           <div class="details">
-
             <p>
-              <strong>Mentor:</strong>
-              {{ plan.mentor || 'Not assigned' }}
+              <strong> Mentor: </strong>
+
+              {{ plan.mentor || "Not assigned" }}
             </p>
 
             <p>
-              <strong>Skill Gaps:</strong>
-              {{ plan.skillGaps || 'No major gaps' }}
+              <strong> Skill Gaps: </strong>
+
+              {{ plan.skillGaps || "No major gaps" }}
             </p>
 
             <p>
-              <strong>Training Plan:</strong>
-              {{ plan.trainingPlan || 'Not defined' }}
-            </p>
+              <strong> Training Plan: </strong>
 
+              {{ plan.trainingPlan || "Not defined" }}
+            </p>
           </div>
 
+          <!-- PROMOTION -->
 
           <div class="promotion">
-
             <div>
+              <span> Promotion Score </span>
 
-              <span>
-                Promotion Score
-              </span>
-
-              <strong>
-                {{ plan.promotionScore }}/100
-              </strong>
-
+              <strong> {{ plan.promotionScore ?? 0 }}/100 </strong>
             </div>
 
-
             @if (plan.promotionEligible) {
-
-              <span class="eligible">
-                Promotion Eligible
-              </span>
-
+              <span class="eligible"> Promotion Eligible </span>
             } @else {
-
-              <span class="not-eligible">
-                Not Yet Eligible
-              </span>
-
+              <span class="not-eligible"> Not Yet Eligible </span>
             }
-
           </div>
 
+          <!-- MANAGEMENT ACTIONS -->
+
+          @if (canManageCareerPlans) {
+            <div class="card-actions">
+              <button
+                type="button"
+                class="delete-button"
+                (click)="deleteCareerPlan(plan)"
+              >
+                Delete
+              </button>
+            </div>
+          }
         </div>
-
       }
-
     </div>
-
   }
 
+  <!-- EMPTY -->
 
-  @if (plans.length === 0) {
-
+  @if (!loading && plans.length === 0) {
     <div class="empty-state">
-
       <h3>No Career Plans</h3>
 
-      <p>
-        No career plans are currently available.
-      </p>
+      <p>No career plans are currently available.</p>
 
+      @if (canManageCareerPlans) {
+        <button type="button" class="add-button" (click)="openAddCareerPlan()">
+          + Create Career Plan
+        </button>
+      }
     </div>
-
   }
-
 </div>

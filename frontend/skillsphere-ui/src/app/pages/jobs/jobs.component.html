@@ -2,62 +2,302 @@
 
   <div class="page-header">
 
-    <h2>Internal Job Portal</h2>
+    <div>
 
-    <p>
-      Explore internal career opportunities
-    </p>
+      <h2>
+        @if (canManageJobs) {
+          Job Management
+        } @else {
+          Internal Job Portal
+        }
+      </h2>
 
-  </div>
+      <p>
+        @if (canManageJobs) {
+          Create and manage internal career opportunities
+        } @else {
+          Explore internal career opportunities
+        }
+      </p>
+
+    </div>
 
 
-  <div class="job-grid">
+    @if (canManageJobs) {
 
-    @for (job of jobs; track job.jobId) {
+      <button
+        type="button"
+        class="add-job-button"
+        (click)="openAddJob()">
 
-      <div class="job-card">
+        + Add Job
 
-        <h3>
-          {{ job.title }}
-        </h3>
-
-        <p>
-          <strong>Department:</strong>
-          {{ job.department }}
-        </p>
-
-        <p>
-          <strong>Required Skills:</strong>
-          {{ job.requiredSkills }}
-        </p>
-
-        <p>
-          <strong>Experience:</strong>
-          {{ job.minimumExperience }} years
-        </p>
-
-        <span class="active">
-          Active
-        </span>
-
-        <button type="button">
-          Apply
-        </button>
-
-      </div>
+      </button>
 
     }
 
   </div>
 
 
-  @if (jobs.length === 0) {
+  <!-- Messages -->
 
-    <div class="empty-state">
+  @if (successMessage) {
 
-      No active jobs available.
+    <div class="success-message">
+      {{ successMessage }}
+    </div>
+
+  }
+
+
+  @if (errorMessage) {
+
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+
+  }
+
+
+  <!-- ADD JOB FORM -->
+
+  @if (showAddJob) {
+
+    <div class="job-form-card">
+
+      <div class="form-header">
+
+        <div>
+          <h3>Add New Job</h3>
+
+          <p>
+            Create an internal career opportunity
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cancelAddJob()">
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>
+            Job Title
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newJob.title"
+            placeholder="e.g. Senior Java Developer"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Department
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newJob.department"
+            placeholder="e.g. Engineering"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Required Skills
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newJob.requiredSkills"
+            placeholder="e.g. Java, Spring Boot, SQL"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Minimum Experience
+          </label>
+
+          <input
+            type="number"
+            min="0"
+            [(ngModel)]="newJob.minimumExperience"
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancelAddJob()">
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="saving"
+          (click)="addJob()">
+
+          @if (saving) {
+            Saving...
+          } @else {
+            Add Job
+          }
+
+        </button>
+
+      </div>
 
     </div>
+
+  }
+
+
+  <!-- JOB LIST -->
+
+  @if (loading) {
+
+    <div class="empty-state">
+      Loading jobs...
+    </div>
+
+  } @else {
+
+    @if (jobs.length > 0) {
+
+      <div class="job-grid">
+
+        @for (
+          job of jobs;
+          track job.jobId || job.id
+        ) {
+
+          <div class="job-card">
+
+            <div class="job-card-header">
+
+              <h3>
+                {{ job.title }}
+              </h3>
+
+              <span class="active">
+                Active
+              </span>
+
+            </div>
+
+
+            <p>
+              <strong>Department:</strong>
+              {{ job.department }}
+            </p>
+
+
+            <p>
+              <strong>Required Skills:</strong>
+              {{ job.requiredSkills }}
+            </p>
+
+
+            <p>
+              <strong>Experience:</strong>
+              {{ job.minimumExperience }}
+              years
+            </p>
+
+
+            <!-- Employee action -->
+
+            @if (!canManageJobs) {
+
+              <button
+                type="button"
+                class="apply-button">
+
+                Apply
+
+              </button>
+
+            }
+
+
+            <!-- Admin action -->
+
+            @if (isAdmin) {
+
+              <button
+                type="button"
+                class="delete-button"
+                (click)="deleteJob(job)">
+
+                Delete
+
+              </button>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state">
+
+        <h3>
+          No active jobs
+        </h3>
+
+        @if (canManageJobs) {
+
+          <p>
+            Add a new internal job opportunity
+            using the button above.
+          </p>
+
+        } @else {
+
+          <p>
+            No internal job opportunities are
+            currently available.
+          </p>
+
+        }
+
+      </div>
+
+    }
 
   }
 

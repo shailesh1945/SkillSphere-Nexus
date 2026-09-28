@@ -5,6 +5,7 @@ import com.skillsphere.nexus.career_service.dto.response.CareerPlanResponse;
 import com.skillsphere.nexus.career_service.model.CareerPlan;
 import com.skillsphere.nexus.career_service.repository.CareerPlanRepository;
 import com.skillsphere.nexus.career_service.service.CareerPlanService;
+import com.skillsphere.nexus.skill_service.dto.response.EmployeeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,20 @@ public class CareerPlanServiceImpl
         return mapToResponse(savedCareerPlan);
     }
 
+
+//    public List<CareerPlanResponse> getCareerPlansForUser(
+//            String keycloakUserId) {
+//
+//        EmployeeResponse employee =
+//                employeeClient.getEmployeeByKeycloakUserId(
+//                        keycloakUserId);
+//
+//        return careerPlanRepository
+//                .findByEmployeeId(employee.getEmployeeId())
+//                .stream()
+//                .map(this::mapToResponse)
+//                .toList();
+//    }
 
     @Override
     public List<CareerPlanResponse> getAllCareerPlans() {

@@ -1,0 +1,215 @@
+.profile-page {
+  padding: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+
+/* Header */
+
+.profile-header {
+  margin-bottom: 25px;
+}
+
+.back-button {
+  border: none;
+  background: none;
+  padding: 0;
+
+  color: #2563eb;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  margin-bottom: 20px;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}
+
+.profile-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-title h1 {
+  margin: 0;
+
+  font-size: 26px;
+  font-weight: 600;
+
+  color: #1f2937;
+}
+
+.profile-title p {
+  margin: 4px 0 0;
+
+  color: #6b7280;
+  font-size: 13px;
+}
+
+
+/* Cards */
+
+.profile-card {
+  background: white;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.profile-card h2 {
+  margin: 0 0 20px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #1f2937;
+}
+
+
+/* Information */
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-item span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.info-item strong {
+  font-size: 14px;
+  color: #1f2937;
+}
+
+
+/* Skills */
+
+.skill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skill-item {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 12px 14px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+
+  font-size: 14px;
+}
+
+.skill-item span {
+  color: #374151;
+}
+
+.skill-item strong {
+  color: #2563eb;
+}
+
+
+/* Empty */
+
+.muted {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+
+/* State */
+
+.state-card {
+  padding: 50px;
+
+  text-align: center;
+
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  color: #6b7280;
+}
+
+
+/* Error */
+
+.error-card {
+  padding: 25px;
+
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+
+  border-radius: 8px;
+
+  color: #991b1b;
+}
+
+.error-card h3 {
+  margin-top: 0;
+}
+
+.error-card button {
+  border: none;
+
+  background: #2563eb;
+  color: white;
+
+  padding: 8px 14px;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+
+/* Responsive */
+
+@media (max-width: 650px) {
+
+  .profile-page {
+    padding: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

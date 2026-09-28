@@ -1,95 +1,787 @@
 <div class="container">
+  <div class="page-header">
+    <div>
+      <h2>
+        @if (isEmployee) {
+          My Certifications
+        } @else {
+          Certification Management
+        }
+      </h2>
 
-  <h2>Certification Management</h2>
-
-  <div class="stats">
-
-    <div class="stat">
-      <p>Total Certifications</p>
-      <h3>{{ certifications.length }}</h3>
+      <p>
+        @if (isEmployee) {
+          View your earned certifications and manage renewals
+        } @else {
+          Manage employee certifications and renewal requests
+        }
+      </p>
     </div>
 
-    <div class="stat">
-      <p>Valid</p>
-      <h3>{{ getValidCount() }}</h3>
-    </div>
+    @if (canManageCertifications) {
+      <div class="header-actions">
+        <button
+          type="button"
+          class="add-certification-button"
+          (click)="openAddCertificationForm()"
+        >
+          + Add Certification
+        </button>
 
-    <div class="stat">
-      <p>Expired</p>
-      <h3>{{ getExpiredCount() }}</h3>
-    </div>
+        <button
+          type="button"
+          class="renewal-requests-button"
+          (click)="toggleRenewalRequests()"
+        >
+          <span class="bell-icon">🔔</span>
 
+          Renewal Requests
+
+          @if (renewalRequests.length > 0) {
+            <span class="request-badge">
+              {{ renewalRequests.length }}
+            </span>
+          }
+        </button>
+      </div>
+    }
   </div>
 
-  <div class="certifications">
+  @if (showAddForm && canManageCertifications) {
+    <div class="certification-form-card">
+      <div class="certification-form-header">
+        <div>
+          <h2>Add Certification</h2>
 
-    <div
-      class="certification-card"
-      *ngFor="let cert of certifications"
-    >
+          <p>Add a certification to an employee's profile</p>
+        </div>
 
-      <h3>{{ cert.name }}</h3>
-
-      <p>
-        <strong>Employee:</strong>
-        {{ cert.employeeName }}
-      </p>
-
-      <p>
-        <strong>Issuer:</strong>
-        {{ cert.issuingOrganization }}
-      </p>
-
-      <p>
-        <strong>Issued:</strong>
-        {{ cert.issueDate }}
-      </p>
-
-      <p>
-        <strong>Expiry:</strong>
-        {{ cert.expiryDate }}
-      </p>
-
-      <p>
-        <strong>Status:</strong>
-
-        <span
-          class="status"
-          [ngClass]="{
-            'valid': cert.status === 'VALID',
-            'expired': cert.status === 'EXPIRED',
-            'pending': cert.status === 'PENDING_RENEWAL'
-          }"
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeAddCertificationForm()"
         >
-          {{ cert.status }}
-        </span>
-      </p>
+          ×
+        </button>
+      </div>
 
-      <div class="buttons">
+      <div class="certification-form-grid">
+        <!-- Certification Name -->
 
-        <button type="button">
-          Renew
+        <div class="form-group">
+          <label> Certification Name * </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newCertification.certificationName"
+            placeholder="e.g. AWS Certified Developer"
+          />
+        </div>
+
+        <!-- Issuing Organization -->
+
+        <div class="form-group">
+          <label> Issuing Organization </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newCertification.issuingOrganization"
+            placeholder="e.g. Amazon Web Services"
+          />
+        </div>
+
+        <!-- Employee -->
+
+        <div class="form-group">
+          <label> Employee * </label>
+
+          <select [(ngModel)]="newCertification.employeeId">
+            <option value="">Select Employee</option>
+
+            @for (employee of employees; track employee.employeeId) {
+              <option [value]="employee.employeeId">
+                {{ employee.firstName }}
+                {{ employee.lastName }}
+
+                @if (employee.email) {
+                  — {{ employee.email }}
+                }
+              </option>
+            }
+          </select>
+        </div>
+
+        <!-- Issue Date -->
+
+        <div class="form-group">
+          <label> Issue Date </label>
+
+          <input type="date" [(ngModel)]="newCertification.issueDate" />
+        </div>
+
+        <!-- Expiry Date -->
+
+        <div class="form-group">
+          <label> Expiry Date </label>
+
+          <input type="date" [(ngModel)]="newCertification.expiryDate" />
+        </div>
+
+        <!-- Credential ID -->
+
+        <div class="form-group">
+          <label> Credential ID </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newCertification.credentialId"
+            placeholder="e.g. AWS-123456"
+          />
+        </div>
+
+        <!-- Credential URL -->
+
+        <div class="form-group full-width">
+          <label> Credential URL </label>
+
+          <input
+            type="url"
+            [(ngModel)]="newCertification.credentialUrl"
+            placeholder="https://..."
+          />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="cancel-form-button"
+          (click)="closeAddCertificationForm()"
+        >
+          Cancel
         </button>
 
-        <button type="button">
-          View
+        <button
+          type="button"
+          class="save-certification-button"
+          [disabled]="savingCertification"
+          (click)="addCertification()"
+        >
+          @if (savingCertification) {
+            Adding...
+          } @else {
+            Add Certification
+          }
         </button>
+      </div>
+    </div>
+  }
 
-        <button type="button">
-          Report
-        </button>
+  @if (loading) {
+    <div class="loading">Loading certifications...</div>
+  }
+
+  @if (errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (successMessage) {
+    <div class="success-message">
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (!loading) {
+    <div class="stats">
+      <div class="stat">
+        <p>Total Certifications</p>
+
+        <h3>
+          {{ certifications.length }}
+        </h3>
+      </div>
+
+      <div class="stat">
+        <p>Valid</p>
+
+        <h3>
+          {{ getValidCount() }}
+        </h3>
+      </div>
+
+      <div class="stat">
+        <p>Expired</p>
+
+        <h3>
+          {{ getExpiredCount() }}
+        </h3>
+      </div>
+
+      @if (isEmployee) {
+        <div class="stat">
+          <p>Expiring / Renewal</p>
+
+          <h3>
+            {{ getExpiringCount() }}
+          </h3>
+        </div>
+      }
+    </div>
+
+    @if (canManageCertifications && showRenewalRequests) {
+      <div class="renewal-panel">
+        <div class="renewal-panel-header">
+          <div>
+            <h2>Renewal Requests</h2>
+
+            <p>Review employee certification renewal requests</p>
+          </div>
+
+          <button
+            type="button"
+            class="close-requests-button"
+            (click)="toggleRenewalRequests()"
+          >
+            ×
+          </button>
+        </div>
+
+        @if (loadingRenewals) {
+          <div class="renewal-loading">Loading renewal requests...</div>
+        }
+
+        @if (!loadingRenewals && renewalRequests.length === 0) {
+          <div class="no-renewals">
+            <div class="no-renewals-icon">✓</div>
+
+            <h3>No Renewal Requests</h3>
+
+            <p>There are currently no certification renewal requests.</p>
+          </div>
+        }
+
+        @if (!loadingRenewals && renewalRequests.length > 0) {
+          <div class="renewal-list">
+            @for (renewal of renewalRequests; track renewal.renewalId) {
+              <div class="renewal-card">
+                <div class="renewal-card-header">
+                  <div>
+                    <h3>
+                      {{ renewal.certificationName }}
+                    </h3>
+
+                    <p>
+                      Employee:
+                      <strong>
+                        {{ renewal.employeeName }}
+                      </strong>
+                    </p>
+                  </div>
+
+                  <span
+                    class="renewal-status"
+                    [class.requested]="renewal.status === 'REQUESTED'"
+                    [class.approved]="renewal.status === 'APPROVED'"
+                    [class.rejected]="renewal.status === 'REJECTED'"
+                  >
+                    {{ renewal.status }}
+                  </span>
+                </div>
+
+                <div class="renewal-details">
+                  <div>
+                    <span>Current Expiry</span>
+
+                    <strong>
+                      {{ renewal.oldExpiry || "—" }}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Requested By</span>
+
+                    <strong>
+                      {{ renewal.requestedBy || "—" }}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Requested At</span>
+
+                    <strong>
+                      {{ renewal.requestedAt || "—" }}
+                    </strong>
+                  </div>
+                </div>
+
+                @if (renewal.status === "REQUESTED") {
+                  <div class="renewal-actions">
+                    <button
+                      type="button"
+                      class="approve-button"
+                      (click)="openApproval(renewal)"
+                    >
+                      Approve
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <div class="certifications">
+      @for (cert of certifications; track cert.certificationId ?? cert.id) {
+        <div class="certification-card">
+          <h3>
+            {{ cert.certificationName }}
+          </h3>
+
+          @if (!isEmployee) {
+            <p>
+              <strong>Employee:</strong>
+              {{ cert.employeeName }}
+            </p>
+          }
+
+          <p>
+            <strong>Issuer:</strong>
+            {{ cert.issuingOrganization }}
+          </p>
+
+          <p>
+            <strong>Issued:</strong>
+            {{ cert.issueDate }}
+          </p>
+
+          <p>
+            <strong>Expiry:</strong>
+            {{ cert.expiryDate }}
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+
+            <span
+              class="status"
+              [class.valid]="cert.status === 'VALID'"
+              [class.expired]="cert.status === 'EXPIRED'"
+              [class.pending]="cert.status === 'PENDING_RENEWAL'"
+              [class.expiring]="cert.status === 'EXPIRING_SOON'"
+            >
+              {{ cert.status }}
+            </span>
+          </p>
+
+          <div class="buttons">
+            @if (isEmployee) {
+              <button
+                type="button"
+                class="view-button"
+                (click)="viewCertification(cert)"
+              >
+                View
+              </button>
+
+              @if (canRequestRenewal(cert)) {
+                <button
+                  type="button"
+                  class="renew-button"
+                  (click)="requestRenewal(cert)"
+                >
+                  Request Renewal
+                </button>
+              }
+            }
+
+            @if (canManageCertifications) {
+              <button
+                type="button"
+                class="view-button"
+                (click)="viewCertification(cert)"
+              >
+                View
+              </button>
+
+              <button type="button" (click)="viewReport(cert)">Report</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- @if (canManageCertifications) {
+
+  <div class="renewal-section">
+
+    <div class="renewal-header">
+
+      <div>
+        <h2>Renewal Requests</h2>
+
+        <p>
+          Review and approve employee certification renewal requests
+        </p>
+      </div>
+
+      <span class="renewal-count">
+        {{ renewalRequests.length }}
+        Request{{ renewalRequests.length === 1 ? '' : 's' }}
+      </span>
+
+    </div>
+
+
+    @if (loadingRenewals) {
+
+      <div class="renewal-loading">
+        Loading renewal requests...
+      </div>
+
+    }
+
+
+    @if (!loadingRenewals && renewalRequests.length > 0) {
+
+      <div class="renewal-list">
+
+        @for (
+          renewal of renewalRequests;
+          track renewal.renewalId
+        ) {
+
+          <div class="renewal-card">
+
+            <div class="renewal-card-header">
+
+              <div>
+
+                <h3>
+                  {{ renewal.certificationName }}
+                </h3>
+
+                <p class="renewal-employee">
+                  Employee:
+                  <strong>
+                    {{ renewal.employeeName }}
+                  </strong>
+                </p>
+
+              </div>
+
+              <span
+                class="renewal-status"
+                [class.requested]="
+                  renewal.status === 'REQUESTED'
+                "
+                [class.approved]="
+                  renewal.status === 'APPROVED'
+                "
+                [class.rejected]="
+                  renewal.status === 'REJECTED'
+                "
+              >
+                {{ renewal.status }}
+              </span>
+
+            </div>
+
+
+            <div class="renewal-details">
+
+              <div>
+                <span>Current Expiry</span>
+
+                <strong>
+                  {{ renewal.oldExpiry || '—' }}
+                </strong>
+              </div>
+
+
+              <div>
+                <span>Requested By</span>
+
+                <strong>
+                  {{ renewal.requestedBy || '—' }}
+                </strong>
+              </div>
+
+
+              <div>
+                <span>Requested At</span>
+
+                <strong>
+                  {{ renewal.requestedAt || '—' }}
+                </strong>
+              </div>
+
+            </div>
+
+
+            @if (renewal.status === 'REQUESTED') {
+
+              <div class="renewal-actions">
+
+                <button
+                  type="button"
+                  class="approve-button"
+                  (click)="openApproval(renewal)"
+                >
+                  Approve
+                </button>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
 
       </div>
 
+    }
+
+
+    @if (
+      !loadingRenewals &&
+      renewalRequests.length === 0
+    ) {
+
+      <div class="no-renewals">
+
+        <div class="no-renewals-icon">
+          ✓
+        </div>
+
+        <h3>
+          No Pending Renewal Requests
+        </h3>
+
+        <p>
+          There are currently no certification renewal requests
+          waiting for approval.
+        </p>
+
+      </div>
+
+    }
+
+
+
+  </div>
+
+} -->
+
+    @if (showApprovalForm && selectedRenewal) {
+      <div class="approval-modal-backdrop" (click)="cancelApproval()">
+        <div class="approval-modal" (click)="$event.stopPropagation()">
+          <!-- Header -->
+
+          <div class="approval-header">
+            <div>
+              <h2>Approve Renewal</h2>
+
+              <p>Update the certificate expiry date</p>
+            </div>
+
+            <button
+              type="button"
+              class="close-button"
+              (click)="cancelApproval()"
+            >
+              ×
+            </button>
+          </div>
+
+          <!-- Details -->
+
+          <div class="approval-details">
+            <div class="approval-detail-item">
+              <span>Certificate</span>
+
+              <strong>
+                {{ selectedRenewal.certificationName }}
+              </strong>
+            </div>
+
+            <div class="approval-detail-item">
+              <span>Employee</span>
+
+              <strong>
+                {{ selectedRenewal.employeeName }}
+              </strong>
+            </div>
+
+            <div class="approval-detail-item">
+              <span>Current Expiry</span>
+
+              <strong>
+                {{ selectedRenewal.oldExpiry }}
+              </strong>
+            </div>
+          </div>
+
+          <!-- New Expiry -->
+
+          <div class="approval-form-group">
+            <label> New Expiry Date </label>
+
+            <input type="date" [(ngModel)]="newExpiry" />
+          </div>
+
+          <!-- Actions -->
+
+          <div class="approval-actions">
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="cancelApproval()"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="approve-button"
+              [disabled]="!newExpiry"
+              (click)="approveRenewal()"
+            >
+              Approve Renewal
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (certifications.length === 0) {
+      <div class="empty-state">
+        @if (isEmployee) {
+          <h3>No certifications yet</h3>
+
+          <p>Complete your assigned courses to earn certifications.</p>
+        } @else {
+          <p>No certifications found.</p>
+        }
+      </div>
+    }
+  }
+
+  @if (showCertificationDetails) {
+    <div class="modal-backdrop" (click)="closeCertificationDetails()">
+      <div class="certification-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h2>Certification Details</h2>
+
+            <p>View complete certification information</p>
+          </div>
+
+          <button
+            type="button"
+            class="close-button"
+            (click)="closeCertificationDetails()"
+          >
+            ×
+          </button>
+        </div>
+
+        @if (loadingDetails) {
+          <div class="modal-loading">Loading certification details...</div>
+        } @else if (detailsError) {
+          <div class="modal-error">
+            {{ detailsError }}
+          </div>
+        } @else if (selectedCertification) {
+          <div class="details-grid">
+            <div class="detail-item">
+              <span>Certification</span>
+              <strong>
+                {{ selectedCertification.certificationName || "—" }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Employee</span>
+              <strong>
+                {{ selectedCertification.employeeName || "—" }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Issuer</span>
+              <strong>
+                {{
+                  selectedCertification.issuingOrganization ||
+                    selectedCertification.issuer ||
+                    "—"
+                }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Status</span>
+
+              <strong
+                [class.status-valid]="selectedCertification.status === 'VALID'"
+                [class.status-expired]="
+                  selectedCertification.status === 'EXPIRED'
+                "
+              >
+                {{ selectedCertification.status || "—" }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Issue Date</span>
+              <strong>
+                {{ selectedCertification.issueDate || "—" }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Expiry Date</span>
+              <strong>
+                {{ selectedCertification.expiryDate || "—" }}
+              </strong>
+            </div>
+
+            <div class="detail-item">
+              <span>Certification ID</span>
+              <strong>
+                {{
+                  selectedCertification.certificationId ||
+                    selectedCertification.id ||
+                    "—"
+                }}
+              </strong>
+            </div>
+
+            @if (selectedCertification.credentialId) {
+              <div class="detail-item">
+                <span>Credential ID</span>
+                <strong>
+                  {{ selectedCertification.credentialId }}
+                </strong>
+              </div>
+            }
+          </div>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="close-modal-button"
+              (click)="closeCertificationDetails()"
+            >
+              Close
+            </button>
+          </div>
+        }
+      </div>
     </div>
-
-  </div>
-
-  <div
-    class="empty-state"
-    *ngIf="certifications.length === 0"
-  >
-    <p>No certifications found.</p>
-  </div>
-
+  }
 </div>

@@ -1,7 +1,9 @@
 package com.skillsphere.nexus.skill_service.controller;
 
+import com.skillsphere.nexus.skill_service.dto.request.EmployeeSkillRequest;
 import com.skillsphere.nexus.skill_service.service.SkillProfileService;
 import com.skillsphere.nexus.skill_service.service.impl.SkillProfileServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,20 @@ public class SkillProfileController {
 
         return ResponseEntity.ok(
                 skillProfileService.getSkillProfile(employeeId)
+        );
+    }
+
+    @PostMapping("/{employeeId}/skills")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'HR', 'TRAINING_MANAGER', 'ADMIN')")
+    public ResponseEntity<Map<String, Object>> addSkillToProfile(
+            @PathVariable UUID employeeId,
+            @Valid @RequestBody EmployeeSkillRequest request) {
+
+        return ResponseEntity.ok(
+                skillProfileService.addSkillToProfile(
+                        employeeId,
+                        request
+                )
         );
     }
 }

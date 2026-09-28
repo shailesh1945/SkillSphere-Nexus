@@ -29,4 +29,6 @@ public class AssessmentResponse {
     private String result;
 
     private Boolean verified;
+
+    private Integer totalQuestions;
 }

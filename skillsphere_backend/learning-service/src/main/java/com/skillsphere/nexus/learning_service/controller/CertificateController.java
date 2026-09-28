@@ -18,7 +18,7 @@ public class CertificateController {
 
     private final CertificateService certificateService;
     @PostMapping("/{enrollmentId}")
-    @PreAuthorize("hasAnyRole('TRAINING_MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINING_MANAGER', 'ADMIN')")
     public LearningCertificate generateCertificate(
             @PathVariable UUID enrollmentId) {
         return certificateService

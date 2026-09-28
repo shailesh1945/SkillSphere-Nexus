@@ -3,6 +3,7 @@ package com.skillsphere.nexus.skill_service.service;
 import com.skillsphere.nexus.skill_service.dto.request.RenewalRequest;
 import com.skillsphere.nexus.skill_service.dto.response.RenewalResponse;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface RenewalService {
@@ -14,4 +15,6 @@ public interface RenewalService {
     RenewalResponse approveRenewal(
             UUID renewalId,
             RenewalRequest request);
+
+    List<RenewalResponse> getRenewalRequests();
 }

@@ -1,1 +1,374 @@
-<p>learning-path works!</p>
+<div class="learning-page">
+
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">LEARNING & DEVELOPMENT</p>
+
+      <h1>My Learning Path</h1>
+
+      <p class="subtitle">
+        Follow your assigned courses, track your progress,
+        and complete your learning journey.
+      </p>
+    </div>
+
+    <div class="user-badge">
+      {{ username }}
+    </div>
+  </div>
+
+
+  @if (loading) {
+
+    <div class="loading-card">
+      <div class="spinner"></div>
+
+      <p>Loading your learning path...</p>
+    </div>
+
+  } @else {
+
+    @if (errorMessage) {
+
+      <div class="error-card">
+        <strong>Unable to load learning path</strong>
+        <p>{{ errorMessage }}</p>
+      </div>
+
+    } @else {
+
+      <!-- SUMMARY CARDS -->
+
+      <section class="summary-grid">
+
+        <div class="summary-card">
+          <div class="summary-icon">📚</div>
+
+          <div>
+            <span>Total Courses</span>
+            <strong>{{ learningPath.length }}</strong>
+          </div>
+        </div>
+
+
+        <div class="summary-card">
+          <div class="summary-icon">▶️</div>
+
+          <div>
+            <span>In Progress</span>
+            <strong>{{ inProgressCount }}</strong>
+          </div>
+        </div>
+
+
+        <div class="summary-card">
+          <div class="summary-icon">✅</div>
+
+          <div>
+            <span>Completed</span>
+            <strong>{{ completedCount }}</strong>
+          </div>
+        </div>
+
+
+        <div class="summary-card">
+          <div class="summary-icon">📈</div>
+
+          <div>
+            <span>Overall Progress</span>
+            <strong>{{ overallProgress }}%</strong>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- OVERALL PROGRESS -->
+
+      <section class="progress-card">
+
+        <div class="progress-header">
+
+          <div>
+            <h2>Learning Journey</h2>
+
+            <p>
+              {{ completedCount }} of
+              {{ learningPath.length }}
+              courses completed
+            </p>
+          </div>
+
+          <strong class="progress-value">
+            {{ overallProgress }}%
+          </strong>
+
+        </div>
+
+
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            [style.width.%]="overallProgress">
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- NEXT COURSE -->
+
+      @if (nextCourse) {
+
+        <section class="next-course">
+
+          <div class="next-content">
+
+            <span class="next-label">
+              NEXT STEP
+            </span>
+
+            <h2>
+              {{ nextCourse.course.title || nextCourse.course.name }}
+            </h2>
+
+            <p>
+              @if (nextCourse.status === 'IN_PROGRESS') {
+                Continue your current course and keep building your skills.
+              } @else {
+                Start this course to continue your learning journey.
+              }
+            </p>
+
+            <div class="next-progress">
+
+              <div class="small-progress-track">
+                <div
+                  class="small-progress-fill"
+                  [style.width.%]="nextCourse.progress">
+                </div>
+              </div>
+
+              <span>
+                {{ nextCourse.progress }}%
+              </span>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      }
+
+
+      <!-- LEARNING PATH -->
+
+      <section class="path-section">
+
+        <div class="section-heading">
+
+          <div>
+            <p class="eyebrow">YOUR ROADMAP</p>
+
+            <h2>Learning Path</h2>
+          </div>
+
+          <span class="course-count">
+            {{ learningPath.length }} courses
+          </span>
+
+        </div>
+
+
+        @if (learningPath.length === 0) {
+
+          <div class="empty-card">
+
+            <div class="empty-icon">📚</div>
+
+            <h3>No courses available</h3>
+
+            <p>
+              There are currently no courses available
+              for your learning path.
+            </p>
+
+          </div>
+
+        } @else {
+
+          <div class="timeline">
+
+            @for (
+              item of learningPath;
+              track item.course.id || item.course.courseId;
+              let i = $index
+            ) {
+
+              <div class="timeline-item">
+
+                <div
+                  class="timeline-number"
+                  [class.completed]="item.status === 'COMPLETED'"
+                  [class.active]="item.status === 'IN_PROGRESS'"
+                >
+
+                  @if (item.status === 'COMPLETED') {
+                    ✓
+                  } @else {
+                    {{ i + 1 }}
+                  }
+
+                </div>
+
+
+                <div class="course-card">
+
+                  <div class="course-top">
+
+                    <div>
+
+                      <span class="course-step">
+                        COURSE {{ i + 1 }}
+                      </span>
+
+                      <h3>
+                        {{
+                          item.course.title ||
+                          item.course.name ||
+                          'Untitled Course'
+                        }}
+                      </h3>
+
+                    </div>
+
+
+                    <span
+                      class="status"
+                      [class.completed]="
+                        item.status === 'COMPLETED'
+                      "
+                      [class.in-progress]="
+                        item.status === 'IN_PROGRESS'
+                      "
+                    >
+                      {{ getStatusLabel(item.status) }}
+                    </span>
+
+                  </div>
+
+
+                  @if (item.course.description) {
+
+                    <p class="course-description">
+                      {{ item.course.description }}
+                    </p>
+
+                  }
+
+
+                  <div class="course-meta">
+
+                    @if (item.course.category) {
+                      <span>
+                        🏷 {{ item.course.category }}
+                      </span>
+                    }
+
+                    @if (item.course.level) {
+                      <span>
+                        📊 {{ item.course.level }}
+                      </span>
+                    }
+
+                    @if (
+                      item.course.duration ||
+                      item.course.durationHours
+                    ) {
+                      <span>
+                        ⏱
+                        {{
+                          item.course.durationHours ||
+                          item.course.duration
+                        }}
+                        hours
+                      </span>
+                    }
+
+                  </div>
+
+
+                  <div class="course-progress">
+
+                    <div class="progress-label">
+
+                      <span>Progress</span>
+
+                      <strong>
+                        {{ item.progress }}%
+                      </strong>
+
+                    </div>
+
+                    <div class="progress-track">
+
+                      <div
+                        class="progress-fill"
+                        [style.width.%]="item.progress">
+                      </div>
+
+                    </div>
+
+                  </div>
+
+
+                  <div class="course-actions">
+
+                    @if (item.status === 'COMPLETED') {
+
+                      <button
+                        type="button"
+                        class="completed-button"
+                        disabled>
+                        ✓ Completed
+                      </button>
+
+                    } @else if (item.status === 'IN_PROGRESS') {
+
+                      <button
+                        type="button"
+                        class="continue-button">
+                        Continue Learning
+                      </button>
+
+                    } @else {
+
+                      <button
+                        type="button"
+                        class="enroll-button"
+                        (click)="enroll(item)">
+                        Enroll Now
+                      </button>
+
+                    }
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+  }
+
+</div>

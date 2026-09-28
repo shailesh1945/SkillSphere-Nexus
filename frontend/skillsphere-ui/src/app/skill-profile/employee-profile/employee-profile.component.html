@@ -1,1 +1,239 @@
-<p>employee-profile works!</p>
+<div class="profile-page">
+
+  @if (loading) {
+
+    <div class="state-card">
+      Loading employee profile...
+    </div>
+
+  }
+
+  @else if (errorMessage) {
+
+    <div class="error-card">
+
+      <h3>Unable to load profile</h3>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+      <button
+        type="button"
+        (click)="goBack()">
+        Back to Employees
+      </button>
+
+    </div>
+
+  }
+
+  @else if (employee) {
+
+    <!-- Header -->
+
+    <div class="profile-header">
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()">
+        ← Back to Employees
+      </button>
+
+      <div class="profile-title">
+
+        <div class="avatar">
+          {{ getEmployeeName().charAt(0).toUpperCase() }}
+        </div>
+
+        <div>
+
+          <h1>
+            {{ getEmployeeName() }}
+          </h1>
+
+          <p>
+            Employee ID:
+            {{
+              employee.employeeId ??
+              employee.empId ??
+              employee.id
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Basic Information -->
+
+    <section class="profile-card">
+
+      <h2>Employee Information</h2>
+
+      <div class="info-grid">
+
+        <div class="info-item">
+
+          <span>Employee ID</span>
+
+          <strong>
+            {{
+              employee.employeeId ??
+              employee.empId ??
+              employee.id ??
+              '—'
+            }}
+          </strong>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <span>Email</span>
+
+          <strong>
+            {{ employee.email || '—' }}
+          </strong>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <span>Department</span>
+
+          <strong>
+            {{ getDepartment() }}
+          </strong>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <span>Current Role</span>
+
+          <strong>
+            {{ getRole() }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Skills -->
+
+    <section class="profile-card">
+
+      <h2>Skills</h2>
+
+      @if (
+        employee.skills &&
+        employee.skills.length
+      ) {
+
+        <div class="skill-list">
+
+          @for (
+            skill of employee.skills;
+            track $index
+          ) {
+
+            <div class="skill-item">
+
+              <span>
+                {{ skill.name || skill.skillName }}
+              </span>
+
+              @if (skill.level || skill.proficiency) {
+
+                <strong>
+                  {{ skill.level || skill.proficiency }}
+                </strong>
+
+              }
+
+            </div>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <p class="muted">
+          Skill information is not available
+          in the employee record.
+        </p>
+
+      }
+
+    </section>
+
+
+    <!-- Additional Information -->
+
+    <section class="profile-card">
+
+      <h2>Additional Information</h2>
+
+      <div class="info-grid">
+
+        @if (employee.location) {
+
+          <div class="info-item">
+
+            <span>Location</span>
+
+            <strong>
+              {{ employee.location }}
+            </strong>
+
+          </div>
+
+        }
+
+        @if (employee.phone) {
+
+          <div class="info-item">
+
+            <span>Phone</span>
+
+            <strong>
+              {{ employee.phone }}
+            </strong>
+
+          </div>
+
+        }
+
+        @if (employee.joiningDate) {
+
+          <div class="info-item">
+
+            <span>Joining Date</span>
+
+            <strong>
+              {{ employee.joiningDate }}
+            </strong>
+
+          </div>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
+</div>

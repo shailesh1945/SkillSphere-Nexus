@@ -15,30 +15,587 @@
 }
 
 /* =========================
-   Statistics
+   Page Header
 ========================= */
 
-.stats {
+.page-header {
   display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
-}
 
-.stat {
-  background: white;
-  border: 1px solid #ddd;
-  padding: 15px;
-  width: 215px;
-  border-radius: 5px;
-}
+  justify-content: space-between;
+  align-items: flex-start;
 
-.stat p {
-  color: #666;
+  gap: 24px;
+
   margin-bottom: 8px;
 }
 
+/* =========================
+   Approval Modal
+========================= */
+
+.approval-modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(15, 23, 42, 0.48);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 1100;
+}
+
+.approval-modal {
+  width: 100%;
+  max-width: 620px;
+
+  background: #ffffff;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.22);
+
+  overflow: hidden;
+}
+
+
+/* Header */
+
+.approval-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: 22px 24px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.approval-header h2 {
+  margin: 0;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  color: #172033;
+}
+
+.approval-header p {
+  margin: 6px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+.close-button {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-size: 26px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  border-radius: 6px;
+}
+
+.close-button:hover {
+  background: #f3f4f6;
+
+  color: #172033;
+}
+
+
+/* Details */
+
+.approval-details {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 18px;
+
+  padding: 24px;
+
+  background: #f8fafc;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.approval-detail-item {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.approval-detail-item span {
+  color: #6b7280;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.04em;
+}
+
+.approval-detail-item strong {
+  color: #172033;
+
+  font-size: 14px;
+
+  word-break: break-word;
+}
+
+
+/* Form */
+
+.approval-form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  padding: 24px;
+}
+
+.approval-form-group label {
+  color: #374151;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+.approval-form-group input {
+  width: 100%;
+
+  padding: 11px 12px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  font-size: 14px;
+
+  color: #172033;
+
+  outline: none;
+}
+
+.approval-form-group input:focus {
+  border-color: #4f46e5;
+
+  box-shadow:
+    0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+
+/* Actions */
+
+.approval-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 16px 24px;
+
+  border-top: 1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+.secondary-button {
+  padding: 10px 16px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  background: #f3f4f6;
+}
+
+.approve-button {
+  padding: 10px 16px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #4f46e5;
+
+  color: #ffffff;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.approve-button:hover {
+  background: #4338ca;
+}
+
+.approve-button:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+/* Mobile */
+
+@media (max-width: 650px) {
+
+  .approval-details {
+    grid-template-columns: 1fr;
+  }
+
+  .approval-actions {
+    flex-direction: column-reverse;
+  }
+
+  .approval-actions button {
+    width: 100%;
+  }
+
+}
+
+.page-header h2 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 28px;
+  font-weight: 700;
+
+  letter-spacing: -0.4px;
+}
+
+.page-header p {
+  margin: 7px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* =========================
+   Certification Statistics
+========================= */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  margin: 22px 0 30px;
+}
+
+.stat {
+  background: #ffffff;
+
+  border: 1px solid #dfe3e8;
+  border-radius: 10px;
+
+  padding: 24px 28px;
+
+  min-height: 125px;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.06);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.stat:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 5px 14px rgba(15, 23, 42, 0.09);
+}
+
+.stat p {
+  margin: 0 0 14px;
+
+  color: #64748b;
+
+  font-size: 16px;
+  font-weight: 400;
+}
+
 .stat h3 {
-  font-size: 25px;
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 36px;
+  font-weight: 700;
+
+  line-height: 1;
+}
+
+
+/* =========================
+   Header Actions
+========================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-certification-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 16px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #4f46e5;
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.add-certification-button:hover {
+  background: #4338ca;
+}
+
+
+/* =========================
+   Add Certification Form
+========================= */
+
+.certification-form-card {
+  margin-bottom: 30px;
+
+  padding: 24px;
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 3px 12px rgba(15, 23, 42, 0.06);
+}
+
+.certification-form-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  margin-bottom: 24px;
+}
+
+.certification-form-header h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 21px;
+}
+
+.certification-form-header p {
+  margin: 6px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   Form Grid
+========================= */
+
+.certification-form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.form-group label {
+  color: #374151;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+
+  padding: 10px 12px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 6px;
+
+  background: white;
+
+  color: #111827;
+
+  font-size: 14px;
+
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #4f46e5;
+
+  box-shadow:
+    0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================
+   Form Actions
+========================= */
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 24px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.cancel-form-button {
+  padding: 10px 16px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 6px;
+
+  background: white;
+
+  color: #374151;
+
+  cursor: pointer;
+}
+
+.cancel-form-button:hover {
+  background: #f3f4f6;
+}
+
+.save-certification-button {
+  padding: 10px 16px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #4f46e5;
+
+  color: white;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.save-certification-button:hover {
+  background: #4338ca;
+}
+
+.save-certification-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 700px) {
+
+  .header-actions {
+    width: 100%;
+
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .certification-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
 }
 
 /* =========================
@@ -122,6 +679,376 @@
 }
 
 /* =========================
+   Certification Details
+   ========================= */
+
+.modal-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.45);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 1000;
+}
+
+.certification-modal {
+  width: 100%;
+
+  max-width: 650px;
+
+  background: white;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.2);
+
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  padding: 22px 24px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 21px;
+}
+
+.modal-header p {
+  margin: 6px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+.close-button {
+  border: none;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-size: 28px;
+
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #111827;
+}
+
+.details-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 20px;
+
+  padding: 24px;
+}
+
+.detail-item {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.detail-item span {
+  color: #6b7280;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+.detail-item strong {
+  color: #1f2937;
+
+  font-size: 14px;
+
+  word-break: break-word;
+}
+
+.status-valid {
+  color: #15803d !important;
+}
+
+.status-expired {
+  color: #dc2626 !important;
+}
+
+.modal-loading {
+  padding: 40px;
+
+  text-align: center;
+
+  color: #6b7280;
+}
+
+.modal-error {
+  margin: 24px;
+
+  padding: 14px;
+
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+
+  border-radius: 6px;
+
+  color: #991b1b;
+}
+
+.modal-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  padding: 16px 24px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.close-modal-button {
+  border: none;
+
+  background: #4f46e5;
+
+  color: white;
+
+  padding: 9px 18px;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.close-modal-button:hover {
+  background: #4338ca;
+}
+
+@media (max-width: 600px) {
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.renewal-requests-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+
+  border: 1px solid #4f46e5;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #4f46e5;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.renewal-requests-button:hover {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.bell-icon {
+  font-size: 15px;
+}
+
+.request-badge {
+  min-width: 22px;
+  height: 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 6px;
+
+  border-radius: 20px;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.renewal-panel {
+  margin-bottom: 30px;
+
+  padding: 24px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  box-shadow:
+    0 3px 12px rgba(15, 23, 42, 0.06);
+}
+
+.renewal-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: 20px;
+}
+
+.renewal-panel-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+}
+
+.renewal-panel-header p {
+  margin: 5px 0 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.close-requests-button {
+  width: 32px;
+  height: 32px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  font-size: 20px;
+
+  cursor: pointer;
+}
+
+.close-requests-button:hover {
+  background: #f3f4f6;
+}
+
+.renewal-list {
+  display: grid;
+  gap: 14px;
+}
+
+.renewal-card {
+  padding: 18px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  background: #fafafa;
+}
+
+.renewal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 20px;
+}
+
+.renewal-card-header h3 {
+  margin: 0;
+
+  font-size: 17px;
+}
+
+.renewal-card-header p {
+  margin: 6px 0 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.renewal-details {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 20px;
+
+  margin-top: 18px;
+
+  padding-top: 15px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.renewal-details span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #9ca3af;
+
+  font-size: 11px;
+
+  text-transform: uppercase;
+}
+
+.renewal-details strong {
+  font-size: 13px;
+}
+
+.renewal-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 15px;
+}
+
+/* =========================
    Buttons
 ========================= */
 
@@ -189,6 +1116,10 @@
 
 @media (max-width: 900px) {
 
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .certifications {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -198,11 +1129,11 @@
 @media (max-width: 600px) {
 
   .stats {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .stat {
-    width: 100%;
+    min-height: 110px;
   }
 
   .certifications {

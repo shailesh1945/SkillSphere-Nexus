@@ -22,7 +22,13 @@ public class EnrollmentController {
     @PostMapping
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'TRAINING_MANAGER', 'ADMIN')")
     public EnrollmentResponse enroll(
-            @RequestBody EnrollmentRequest request) {
+            @RequestParam("empId") UUID empId,
+            @RequestParam("courseId") UUID courseId) {
+
+        EnrollmentRequest request = EnrollmentRequest.builder()
+                .empId(empId)
+                .courseId(courseId)
+                .build();
 
         return enrollmentService.enroll(request);
     }

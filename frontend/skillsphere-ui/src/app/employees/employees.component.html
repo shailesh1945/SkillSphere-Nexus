@@ -1,0 +1,309 @@
+<div class="employees-page">
+  <div class="page-header">
+    <div>
+      <h1>Employee Management</h1>
+
+      <p>View and manage employee profiles</p>
+    </div>
+
+    <div class="employee-count">{{ filteredEmployees.length }} Employees</div>
+  </div>
+
+  <!-- Search -->
+
+  <div class="toolbar">
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      (input)="filterEmployees()"
+      placeholder="Search employees..."
+      class="search-input"
+    />
+
+    @if (canManageEmployees) {
+      <button
+        type="button"
+        class="add-employee-button"
+        (click)="openAddEmployee()"
+      >
+        + Add Employee
+      </button>
+    }
+  </div>
+
+  <!-- Success -->
+  @if (successMessage) {
+    <div class="success-card">
+      {{ successMessage }}
+    </div>
+  }
+
+  <!-- Add Employee Form -->
+  @if (showAddEmployee) {
+    <div class="employee-form">
+      <div class="form-header">
+        <div>
+          <h2>Add Employee</h2>
+
+          <p>Create a new employee profile</p>
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cancelAddEmployee()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="form-grid">
+        <!-- First Name -->
+        <div class="form-group">
+          <label> First Name * </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newEmployee.firstName"
+            placeholder="e.g. Anuj"
+          />
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+          <label> Last Name * </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newEmployee.lastName"
+            placeholder="e.g. Bhiwagage"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label> Email * </label>
+
+          <input
+            type="email"
+            [(ngModel)]="newEmployee.email"
+            placeholder="employee@example.com"
+          />
+        </div>
+
+        <!-- Username -->
+
+        <div class="form-group">
+          <label> Username * </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newEmployee.username"
+            placeholder="e.g. manish21"
+            autocomplete="off"
+          />
+
+          <small> This will be used for Keycloak login. </small>
+        </div>
+
+        <!-- Temporary Password -->
+
+        <div class="form-group">
+          <label> Temporary Password * </label>
+
+          <input
+            type="password"
+            [(ngModel)]="newEmployee.temporaryPassword"
+            placeholder="Enter temporary password"
+            autocomplete="new-password"
+          />
+
+          <small>
+            This password will be used for the employee's first login.
+          </small>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label> Phone Number </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newEmployee.phoneNumber"
+            placeholder="e.g. 9876543210"
+          />
+        </div>
+
+        <!-- Department -->
+        <div class="form-group">
+          <label> Department </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newEmployee.department"
+            placeholder="e.g. Engineering"
+          />
+        </div>
+
+        <!-- Joining Date -->
+        <div class="form-group">
+          <label> Joining Date </label>
+
+          <input type="date" [(ngModel)]="newEmployee.joiningDate" />
+        </div>
+
+        <!-- Role -->
+        <!-- Role -->
+
+        <div class="form-group">
+          <label> Role * </label>
+
+          <select [(ngModel)]="newEmployee.role" name="role">
+            <option value="DEVELOPER">Developer</option>
+
+            <option value="MANAGER">Manager</option>
+
+            <option value="TECH_LEAD">Tech Lead</option>
+
+            <option value="HR">HR</option>
+
+            <option value="TRAINING_MANAGER">Training Manager</option>
+
+            <option value="ADMIN">Admin</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="keycloak-info">
+        <strong>Login account</strong>
+
+        <p>
+          A Keycloak employee account will be created automatically using the
+          username and temporary password provided above.
+        </p>
+
+        <p>
+          The employee will receive the
+          <strong>ROLE_EMPLOYEE</strong>
+          permission automatically.
+        </p>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancelAddEmployee()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="saving"
+          (click)="addEmployee()"
+        >
+          @if (saving) {
+            Adding...
+          } @else {
+            Add Employee
+          }
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Loading -->
+
+  @if (loading) {
+    <div class="state-card">Loading employees...</div>
+  }
+
+  <!-- Error -->
+
+  @else if (errorMessage) {
+    <div class="error-card">
+      <strong> Unable to load employees </strong>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+      <button type="button" (click)="loadEmployees()">Try Again</button>
+    </div>
+  }
+
+  <!-- Employee Table -->
+
+  @else {
+    <div class="table-card">
+      @if (filteredEmployees.length === 0) {
+        <div class="empty-state">
+          <h3>No employees found</h3>
+
+          <p>Try changing your search.</p>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee ID</th>
+
+                <th>Name</th>
+
+                <th>Email</th>
+
+                <th>Department</th>
+
+                <th>Role</th>
+
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (
+                employee of filteredEmployees;
+                track getEmployeeId(employee)
+              ) {
+                <tr>
+                  <td class="employee-id">
+                    {{ getEmployeeId(employee) }}
+                  </td>
+
+                  <td class="employee-name">
+                    {{ getEmployeeName(employee) }}
+                  </td>
+
+                  <td>
+                    {{ employee.email || "—" }}
+                  </td>
+
+                  <td>
+                    {{ getDepartment(employee) }}
+                  </td>
+
+                  <td>
+                    {{ getEmployeeRole(employee) }}
+                  </td>
+
+                  <td>
+                    <button
+                      type="button"
+                      class="view-button"
+                      (click)="viewEmployee(employee)"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
+</div>

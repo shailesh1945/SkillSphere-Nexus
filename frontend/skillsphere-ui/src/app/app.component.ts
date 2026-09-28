@@ -30,6 +30,10 @@ export class AppComponent {
     return this.authService.hasRole('ROLE_HR');
   }
 
+  get isEmployee(): boolean {
+    return this.authService.hasRole('ROLE_EMPLOYEE');
+  }
+
   get isTrainingManager(): boolean {
     return this.authService.hasRole('ROLE_TRAINING_MANAGER');
   }

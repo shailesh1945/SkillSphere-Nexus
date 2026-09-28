@@ -23,6 +23,11 @@ export class KeycloakAuthService {
     return this.keycloak.updateToken(30);
   }
 
+
+  getUserId(): string {
+  return this.keycloak.tokenParsed?.['sub'] ?? '';
+}
+
   getToken(): string | undefined {
     return this.keycloak.token;
   }

@@ -1,144 +1,569 @@
 .page {
-  width: 90%;
-  max-width: 1100px;
-  margin: 35px auto;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 32px;
 }
 
 .page-header {
-  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 28px;
 }
 
 .page-header h2 {
-  font-size: 32px;
-  margin-bottom: 8px;
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
 }
 
 .page-header p {
-  color: #666;
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 15px;
 }
 
-.cards {
-  display: grid;
-  grid-template-columns:
-    repeat(auto-fit, minmax(350px, 1fr));
+.add-button {
+  border: none;
+  border-radius: 7px;
+  padding: 11px 17px;
 
-  gap: 24px;
+  background: #4f46e5;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
 }
 
-.career-card {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 24px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+.add-button:hover {
+  background: #4338ca;
 }
 
-.card-header {
+.add-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   MESSAGES
+========================= */
+
+.success-message,
+.error-message {
   margin-bottom: 20px;
+  padding: 12px 15px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
 }
 
-.card-header h3 {
-  font-size: 21px;
-  margin-bottom: 8px;
+.success-message {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
 }
 
-.status {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 15px;
-  background: #e0e7ff;
-  color: #3730a3;
+.error-message {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.career-form {
+  margin-bottom: 30px;
+  padding: 24px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  box-shadow:
+    0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: 24px;
+}
+
+.form-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.form-header p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+  font-size: 13px;
+}
+
+.close-button {
+  width: 32px;
+  height: 32px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background: #f8fafc;
+}
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
   font-size: 13px;
   font-weight: 600;
 }
 
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #4f46e5;
+
+  box-shadow:
+    0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.form-group textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+.cancel-button,
+.save-button {
+  padding: 10px 16px;
+
+  border-radius: 6px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.cancel-button {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+}
+
+.save-button {
+  border: none;
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.save-button:hover {
+  background: #4338ca;
+}
+
+
+/* =========================
+   CAREER CARDS
+========================= */
+
+.cards {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 20px;
+}
+
+.career-card {
+  padding: 24px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  box-shadow:
+    0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.card-header {
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.card-header h3 {
+  margin: 0 0 9px;
+
+  font-size: 19px;
+}
+
+.status {
+  display: inline-block;
+
+  padding: 4px 10px;
+
+  border-radius: 20px;
+
+  background: #e0e7ff;
+  color: #4338ca;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================
+   ROLE
+========================= */
+
 .role {
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
   padding: 18px 0;
+
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .role p {
   margin: 5px 0;
 }
 
+.role p strong {
+  font-size: 13px;
+}
+
 .arrow {
-  margin: 8px 0;
+  margin: 9px 0;
+
   color: #4f46e5;
+
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .target-role {
   color: #4f46e5;
-  font-weight: 600;
+  font-weight: 700;
 }
 
+
+/* =========================
+   PROGRESS
+========================= */
+
 .progress-section {
-  margin-top: 20px;
+  padding: 18px 0;
 }
 
 .progress-header {
   display: flex;
   justify-content: space-between;
+
   margin-bottom: 8px;
+
+  font-size: 13px;
 }
 
 .progress-bar {
   width: 100%;
-  height: 10px;
-  background: #e5e7eb;
-  border-radius: 10px;
+  height: 8px;
+
   overflow: hidden;
+
+  border-radius: 20px;
+
+  background: #e2e8f0;
 }
 
 .progress-value {
   height: 100%;
+
+  border-radius: 20px;
+
   background: #4f46e5;
-  border-radius: 10px;
+
+  transition: width 0.3s ease;
 }
 
+
+/* =========================
+   DETAILS
+========================= */
+
 .details {
-  margin-top: 20px;
+  padding: 16px 0;
+
+  border-top: 1px solid #e5e7eb;
 }
 
 .details p {
-  margin-bottom: 10px;
+  margin: 9px 0;
+
+  color: #475569;
+
+  font-size: 13px;
 }
+
+.details strong {
+  color: #111827;
+}
+
+
+/* =========================
+   PROMOTION
+========================= */
 
 .promotion {
-  margin-top: 20px;
-  padding-top: 18px;
-  border-top: 1px solid #eee;
-}
-
-.promotion > div {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
+  align-items: center;
+
+  margin-top: 10px;
+  padding-top: 17px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.promotion div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.promotion span {
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+.promotion strong {
+  font-size: 17px;
 }
 
 .eligible,
 .not-eligible {
-  display: inline-block;
-  padding: 7px 12px;
+  padding: 6px 10px;
+
   border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
+
+  font-size: 11px !important;
+  font-weight: 700;
 }
 
 .eligible {
   background: #dcfce7;
-  color: #166534;
+  color: #15803d;
 }
 
 .not-eligible {
   background: #fee2e2;
-  color: #991b1b;
+  color: #b91c1c;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 18px;
+}
+
+.delete-button {
+  padding: 8px 13px;
+
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+
+  background: #ffffff;
+  color: #dc2626;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: #fef2f2;
+}
+
+.select-loading {
+  padding: 11px 12px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  background: #f8fafc;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.form-group select {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #111827;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  outline: none;
+}
+
+.form-group select:focus {
+  border-color: #4f46e5;
+
+  box-shadow:
+    0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.field-error {
+  color: #dc2626;
+  font-size: 12px;
+}
+
+
+/* =========================
+   EMPTY / LOADING
+========================= */
+
+.loading {
+  padding: 40px;
+
+  text-align: center;
+
+  color: #64748b;
 }
 
 .empty-state {
-  padding: 30px;
+  padding: 50px;
+
   text-align: center;
-  border: 1px solid #ddd;
+
+  border: 1px dashed #cbd5e1;
   border-radius: 10px;
-  background: white;
+
+  background: #ffffff;
+}
+
+.empty-state h3 {
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  margin-bottom: 20px;
+
+  color: #64748b;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .page {
+    padding: 30px 18px;
+  }
+
+  .page-header {
+    flex-direction: column;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+
 }

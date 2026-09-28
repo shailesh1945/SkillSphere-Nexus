@@ -1,6 +1,8 @@
 package com.skillsphere.nexus.skill_service.service;
 
 import com.skillsphere.nexus.skill_service.dto.request.AssessmentRequest;
+import com.skillsphere.nexus.skill_service.dto.request.AssessmentSubmissionRequest;
+import com.skillsphere.nexus.skill_service.dto.response.AssessmentQuestionResponse;
 import com.skillsphere.nexus.skill_service.dto.response.AssessmentResponse;
 
 import java.util.List;
@@ -18,6 +20,15 @@ public interface AssessmentService {
     AssessmentResponse getAssessmentById(UUID assessmentId);
 
     List<AssessmentResponse> getAllAssessments();
+
+    List<AssessmentResponse> getMyAssessments();
+
+    List<AssessmentQuestionResponse> getAssessmentQuestions(
+            UUID assessmentId);
+
+    AssessmentResponse submitAssessment(
+            UUID assessmentId,
+            AssessmentSubmissionRequest request);
 
     void deleteAssessment(UUID assessmentId);
 

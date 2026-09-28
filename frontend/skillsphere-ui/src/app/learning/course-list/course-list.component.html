@@ -1,89 +1,394 @@
 <div class="container">
 
-  <h2>Courses & Learning Paths</h2>
+  <!-- Header -->
 
-  <div class="stats">
+  <div class="page-header">
 
-    <div class="stat">
-      <p>Total Courses</p>
-      <h3>{{ totalCourses }}</h3>
+    <div>
+
+      <h2>
+        Courses & Learning Paths
+      </h2>
+
+      <p>
+        Explore courses and manage your learning journey
+      </p>
+
     </div>
 
-    <div class="stat">
-      <p>Enrollments</p>
-      <h3>{{ enrollments }}</h3>
-    </div>
 
-    <div class="stat">
-      <p>Completion</p>
-      <h3>{{ completion }}</h3>
-    </div>
+    @if (canManageCourses) {
 
-    <div class="stat">
-      <p>Completion Rate</p>
-      <h3>{{ completionRate }}%</h3>
-    </div>
+      <button
+        type="button"
+        class="add-course-button"
+        (click)="openAddCourse()">
+
+        + Add Course
+
+      </button>
+
+    }
 
   </div>
 
-  <div class="courses">
 
-    <div class="course-card" *ngFor="let course of courses">
+  <!-- Messages -->
 
-      <h3>{{ course.title }}</h3>
+  @if (successMessage) {
 
-      <p>{{ course.description }}</p>
+    <div class="success-message">
+      {{ successMessage }}
+    </div>
 
-      <p>
-        Duration: {{ course.duration }} hours
-      </p>
+  }
 
-      <p>
-        Enrolled: 247
-      </p>
 
-      <p>
-        Completed: 189
-      </p>
+  @if (errorMessage) {
 
-      <p>
-        Learning Path: Java Full Stack
-      </p>
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
 
-      <div class="progress-section">
+  }
 
-        <p>
-          Progress: 67%
-        </p>
 
-        <div class="progress-bar">
-          <div class="progress"></div>
+  <!-- Add Course Form -->
+
+  @if (showAddCourse) {
+
+    <div class="course-form">
+
+      <div class="form-header">
+
+        <div>
+
+          <h3>
+            Add New Course
+          </h3>
+
+          <p>
+            Create a new learning course
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cancelAddCourse()">
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>
+            Course Title
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newCourse.title"
+            placeholder="e.g. Advanced Spring Boot"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Duration (hours)
+          </label>
+
+          <input
+            type="number"
+            min="1"
+            [(ngModel)]="newCourse.duration"
+            placeholder="e.g. 40"
+          />
+
+        </div>
+
+
+        <div class="form-group full-width">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            [(ngModel)]="newCourse.description"
+            placeholder="Enter course description">
+          </textarea>
+
         </div>
 
       </div>
 
-      <p>
-        Score: 92%
-      </p>
 
-      <div class="buttons">
+      <div class="form-actions">
 
-        <button type="button">
-          Enroll
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancelAddCourse()">
+
+          Cancel
+
         </button>
 
-        <button type="button">
-          Continue
-        </button>
 
-        <button type="button">
-          Certificate
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="saving"
+          (click)="addCourse()">
+
+          @if (saving) {
+            Saving...
+          } @else {
+            Add Course
+          }
+
         </button>
 
       </div>
 
     </div>
 
+  }
+
+
+  <!-- Statistics -->
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <p>
+        Total Courses
+      </p>
+
+      <h3>
+        {{ totalCourses }}
+      </h3>
+
+    </div>
+
+
+    <div class="stat">
+
+      <p>
+        Enrollments
+      </p>
+
+      <h3>
+        {{ enrollments }}
+      </h3>
+
+    </div>
+
+
+    <div class="stat">
+
+      <p>
+        Completion
+      </p>
+
+      <h3>
+        {{ completion }}
+      </h3>
+
+    </div>
+
+
+    <div class="stat">
+
+      <p>
+        Completion Rate
+      </p>
+
+      <h3>
+        {{ completionRate }}%
+      </h3>
+
+    </div>
+
   </div>
+
+
+  <!-- Courses -->
+
+  <div class="courses">
+
+  @for (
+    course of courses;
+    track course.courseId
+  ) {
+
+    <div class="course-card">
+
+      <h3>
+        {{ course.title }}
+      </h3>
+
+
+      <p class="description">
+        {{ course.description }}
+      </p>
+
+
+      <p>
+        <strong>Duration:</strong>
+        {{ course.duration }} hours
+      </p>
+
+
+      <!-- ========================= -->
+      <!-- EMPLOYEE VIEW -->
+      <!-- ========================= -->
+
+      @if (isEmployee) {
+
+        @if (course.enrolledByEmployee) {
+
+          <p>
+            <strong>Status:</strong>
+
+            <span class="enrolled-status">
+              Enrolled
+            </span>
+          </p>
+
+
+          <p>
+            <strong>Progress:</strong>
+            {{ course.progress }}%
+          </p>
+
+
+          <div class="progress-bar">
+
+            <div
+              class="progress"
+              [style.width.%]="course.progress">
+            </div>
+
+          </div>
+
+
+          @if (course.score !== null) {
+
+            <p>
+              <strong>Score:</strong>
+              {{ course.score }}%
+            </p>
+
+          } @else {
+
+            <p>
+              <strong>Score:</strong>
+              Not attempted
+            </p>
+
+          }
+
+
+          <div class="buttons">
+
+            <button
+              type="button"
+              class="continue-button"
+              (click)="continueCourse(course)">
+
+              Continue
+
+            </button>
+
+
+            <button
+              type="button"
+              class="certificate-button"
+              [disabled]="course.progress < 100"
+              (click)="generateCertificate(course)">
+
+              Certificate
+
+            </button>
+
+          </div>
+
+        } @else {
+
+          <p class="not-enrolled">
+            You are not enrolled in this course.
+          </p>
+
+
+          <button
+            type="button"
+            class="enroll-button"
+            (click)="enroll(course)">
+
+            Enroll
+
+          </button>
+
+        }
+
+      }
+
+
+      <!-- ========================= -->
+      <!-- HR / MANAGER / ADMIN VIEW -->
+      <!-- ========================= -->
+
+      @if (!isEmployee) {
+
+        <p>
+          <strong>Enrollments:</strong>
+          {{ course.enrolled ?? 0 }}
+        </p>
+
+
+        <p>
+          <strong>Completed:</strong>
+          {{ course.completed ?? 0 }}
+        </p>
+
+
+        <div class="manager-label">
+
+          Course Management
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>
+
+
+  @if (courses.length === 0) {
+
+    <div class="empty-state">
+
+      No courses available.
+
+    </div>
+
+  }
 
 </div>

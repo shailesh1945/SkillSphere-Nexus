@@ -1,1 +1,175 @@
-<p>enrollment works!</p>
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <h2>My Learning</h2>
+      <p>
+        Track your enrolled courses and learning progress
+      </p>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      Loading your courses...
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (!loading && enrollments.length === 0) {
+    <div class="empty-state">
+      <h3>No courses yet</h3>
+      <p>
+        You are not enrolled in any courses.
+      </p>
+
+      <button
+        type="button"
+        class="browse-button"
+        (click)="browseCourses()">
+        Browse Courses
+      </button>
+    </div>
+  }
+
+  @if (!loading && enrollments.length > 0) {
+
+    <div class="stats">
+
+      <div class="stat">
+        <p>Enrolled Courses</p>
+        <h3>{{ enrollments.length }}</h3>
+      </div>
+
+      <div class="stat">
+        <p>Completed</p>
+        <h3>{{ completedCount }}</h3>
+      </div>
+
+      <div class="stat">
+        <p>In Progress</p>
+        <h3>{{ inProgressCount }}</h3>
+      </div>
+
+      <div class="stat">
+        <p>Average Progress</p>
+        <h3>{{ averageProgress }}%</h3>
+      </div>
+
+    </div>
+
+    <div class="learning-grid">
+
+      @for (
+        enrollment of enrollments;
+        track enrollment.enrollmentId
+      ) {
+
+        <div class="learning-card">
+
+          <div class="card-header">
+
+            <div>
+              <h3>
+                {{ enrollment.courseTitle }}
+              </h3>
+
+              @if (enrollment.completed) {
+                <span class="completed-badge">
+                  Completed
+                </span>
+              } @else {
+                <span class="progress-badge">
+                  In Progress
+                </span>
+              }
+            </div>
+
+          </div>
+
+          <div class="progress-section">
+
+            <div class="progress-label">
+              <span>Progress</span>
+
+              <strong>
+                {{ enrollment.progress ?? 0 }}%
+              </strong>
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress"
+                [style.width.%]="enrollment.progress ?? 0">
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="details">
+
+            <div>
+              <span>Enrolled</span>
+              <strong>
+                {{ enrollment.enrolledAt | date:'mediumDate' }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Score</span>
+
+              <strong>
+                @if (enrollment.score !== null && enrollment.score !== undefined) {
+                  {{ enrollment.score }}%
+                } @else {
+                  Not attempted
+                }
+              </strong>
+
+            </div>
+
+          </div>
+
+          <div class="actions">
+
+            <button
+              type="button"
+              class="continue-button"
+              (click)="continueLearning(enrollment)">
+
+              @if (enrollment.completed) {
+                Review Course
+              } @else {
+                Continue Learning
+              }
+
+            </button>
+
+            <button
+              type="button"
+              class="certificate-button"
+              [disabled]="!enrollment.completed"
+              (click)="generateCertificate(enrollment)">
+
+              Certificate
+
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

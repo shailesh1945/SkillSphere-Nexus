@@ -2,6 +2,7 @@ package com.skillsphere.nexus.skill_service.service;
 
 import com.skillsphere.nexus.skill_service.dto.request.EmployeeRequest;
 import com.skillsphere.nexus.skill_service.dto.response.EmployeeResponse;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,5 +27,9 @@ public interface EmployeeService {
     boolean emailExists(String email);
 
     long getEmployeeCount();
+
+    EmployeeResponse getCurrentEmployee(
+            Authentication authentication
+    );
 
 }

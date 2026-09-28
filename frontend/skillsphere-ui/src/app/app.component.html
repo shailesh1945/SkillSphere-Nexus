@@ -8,25 +8,49 @@
     <nav class="main-nav">
       <a routerLink="/dashboard" routerLinkActive="active"> Dashboard </a>
 
+      <a routerLink="/skills" routerLinkActive="active"> Skills </a>
+
       <a routerLink="/learning/courses" routerLinkActive="active"> Courses </a>
 
-      <a routerLink="/learning/path" routerLinkActive="active">
-        Learning Path
-      </a>
+      @if (isEmployee || isAdmin || isTrainingManager) {
+        <a routerLink="/learning/path" routerLinkActive="active">
+          Learning Path
+        </a>
+      }
 
-      <!-- Corrected: enrollment, not enrollments -->
-      <a routerLink="/learning/enrollment" routerLinkActive="active">
-        My Learning
-      </a>
+      @if (isEmployee) {
+        <!-- Corrected: enrollment, not enrollments -->
+        <a routerLink="/learning/enrollment" routerLinkActive="active">
+          My Learning
+        </a>
+      }
+
+      @if (isHr || isTrainingManager || isAdmin) {
+        <a routerLink="/assessments" routerLinkActive="active">
+          Skill Assessments
+        </a>
+      }
+
+      @if (authService.hasRole("ROLE_EMPLOYEE")) {
+        <a routerLink="/my-assessments" routerLinkActive="active">
+          My Assessments
+        </a>
+      }
 
       <a routerLink="/certifications" routerLinkActive="active">
         Certifications
       </a>
 
-      <a routerLink="/certifications/expiring" routerLinkActive="active">
-        Expiring Certifications
-      </a>
+      <!-- HR / ADMIN only -->
+      @if (isHr || isAdmin) {
+        <a routerLink="/certifications/expiring" routerLinkActive="active">
+          Expiring Certifications
+        </a>
+      }
 
+      <a routerLink="/career" routerLinkActive="active"> Career </a>
+
+      <a routerLink="/jobs" routerLinkActive="active"> Jobs </a>
       <!-- HR / ADMIN only -->
       @if (isHr || isAdmin) {
         <a routerLink="/employees" routerLinkActive="active"> Employees </a>

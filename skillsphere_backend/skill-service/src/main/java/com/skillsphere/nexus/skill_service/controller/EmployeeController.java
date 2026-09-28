@@ -3,12 +3,15 @@ package com.skillsphere.nexus.skill_service.controller;
 
 import com.skillsphere.nexus.skill_service.dto.request.EmployeeRequest;
 import com.skillsphere.nexus.skill_service.dto.response.EmployeeResponse;
+import com.skillsphere.nexus.skill_service.model.Employee;
+import com.skillsphere.nexus.skill_service.service.CurrentEmployeeService;
 import com.skillsphere.nexus.skill_service.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.UUID;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final CurrentEmployeeService currentEmployeeService;
 
 
     @PostMapping
@@ -29,6 +33,18 @@ public class EmployeeController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(employeeService.addEmployee(request));
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<EmployeeResponse> getCurrentEmployee(
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                employeeService.getCurrentEmployee(
+                        authentication
+                )
+        );
     }
 
     @PutMapping("/{employeeId}")
@@ -51,7 +67,7 @@ public class EmployeeController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('HR', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('HR', 'TRAINING_MANAGER', 'ADMIN')")
     public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
 
         return ResponseEntity.ok(
@@ -103,5 +119,8 @@ public class EmployeeController {
         return ResponseEntity.ok(
                 employeeService.emailExists(email));
     }
+
+
+
 
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -19,15 +20,37 @@ public class CertificateServiceImpl implements CertificateService {
 
     public LearningCertificate generateCertificate(
             UUID enrollmentId) {
+
         Enrollment enrollment =
                 enrollmentRepository.findById(enrollmentId)
                         .orElseThrow(() ->
                                 new RuntimeException(
                                         "Enrollment not found"));
-        if (!Boolean.TRUE.equals(enrollment.getCompleted())) {
+
+        // 100% is the actual completion requirement
+        if (enrollment.getProgress() == null ||
+                enrollment.getProgress() < 100) {
+
             throw new RuntimeException(
                     "Course is not completed");
         }
+
+        // Keep completion state synchronized
+        if (!Boolean.TRUE.equals(
+                enrollment.getCompleted())) {
+
+            enrollment.setCompleted(true);
+
+            enrollment.setCompletedAt(
+                    enrollment.getCompletedAt() != null
+                            ? enrollment.getCompletedAt()
+                            : LocalDateTime.now());
+
+            enrollment =
+                    enrollmentRepository.saveAndFlush(
+                            enrollment);
+        }
+
         LearningCertificate certificate =
                 LearningCertificate.builder()
                         .empId(enrollment.getEmpId())
@@ -40,6 +63,7 @@ public class CertificateServiceImpl implements CertificateService {
                         .certificateNumber(
                                 "SS-" + UUID.randomUUID())
                         .build();
+
         return certificateRepository.save(certificate);
     }
 }

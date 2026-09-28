@@ -22,8 +22,7 @@ public class ProgressServiceImpl
             UUID enrollmentId,
             Integer progress) {
 
-        if (progress < 0 || progress > 100) {
-
+        if (progress == null || progress < 0 || progress > 100) {
             throw new IllegalArgumentException(
                     "Progress must be between 0 and 100");
         }
@@ -34,14 +33,17 @@ public class ProgressServiceImpl
         enrollment.setProgress(progress);
 
         if (progress == 100) {
-
             enrollment.setCompleted(true);
-            enrollment.setCompletedAt(
-                    LocalDateTime.now());
+            enrollment.setCompletedAt(LocalDateTime.now());
+        } else {
+            enrollment.setCompleted(false);
+            enrollment.setCompletedAt(null);
         }
 
-        return mapToResponse(
-                enrollmentRepository.save(enrollment));
+        Enrollment saved =
+                enrollmentRepository.saveAndFlush(enrollment);
+
+        return mapToResponse(saved);
     }
 
     @Override
@@ -79,8 +81,10 @@ public class ProgressServiceImpl
         enrollment.setCompletedAt(
                 LocalDateTime.now());
 
-        return mapToResponse(
-                enrollmentRepository.save(enrollment));
+        Enrollment saved =
+                enrollmentRepository.saveAndFlush(enrollment);
+
+        return mapToResponse(saved);
     }
 
     private Enrollment getEnrollment(

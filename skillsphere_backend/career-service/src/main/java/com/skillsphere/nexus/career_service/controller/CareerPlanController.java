@@ -5,6 +5,7 @@ import com.skillsphere.nexus.career_service.dto.response.CareerPlanResponse;
 import com.skillsphere.nexus.career_service.service.CareerPlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,17 @@ public class CareerPlanController {
                 .getAllCareerPlans();
     }
 
+
+//    @GetMapping("/me")
+//    @PreAuthorize("hasRole('EMPLOYEE')")
+//    public List<CareerPlanResponse> getMyCareerPlans(
+//            Authentication authentication) {
+//
+//        String keycloakUserId = authentication.getName();
+//
+//        return careerPlanService
+//                .getCareerPlansForUser(keycloakUserId);
+//    }
 
     @GetMapping("/{planId}")
     @PreAuthorize("isAuthenticated()")

@@ -12,4 +12,8 @@ public interface CertificationRenewalRepository
         extends JpaRepository<CertificationRenewal, UUID> {
 
         List<CertificationRenewal> findByCertificationCertificationId(UUID certificationId);
+
+        List<CertificationRenewal> findByStatus(
+                CertificationRenewal.RenewalStatus status
+        );
 }

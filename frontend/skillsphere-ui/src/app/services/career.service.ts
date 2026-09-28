@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CareerService {
 
-  private baseUrl = 'http://localhost:8083/api/career';
+  private baseUrl = `${environment.apiUrl}/api/career`;
 
   constructor(private http: HttpClient) {}
 
@@ -78,6 +79,13 @@ export class CareerService {
     );
   }
 
+
+
+  getEmployees() {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/api/employees`
+  );
+}
 
   // Analytics
 

@@ -33,6 +33,9 @@ public class Employee {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(name = "keycloak_user_id", unique = true)
+    private String keycloakUserId;
+
     private String phoneNumber;
 
     private String department;

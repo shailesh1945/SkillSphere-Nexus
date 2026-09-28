@@ -5,7 +5,7 @@ import { CareerService } from '../../services/career.service';
   selector: 'app-analytics',
   standalone: true,
   templateUrl: './analytics.component.html',
-  styleUrl: './analytics.component.css'
+  styleUrl: './analytics.component.scss'
 })
 export class AnalyticsComponent implements OnInit {
 
